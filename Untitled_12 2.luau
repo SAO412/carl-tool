@@ -1,12 +1,3172 @@
---[[
- .____                  ________ ___.    _____                           __                
- |    |    __ _______   \_____  \\_ |___/ ____\_ __  ______ ____ _____ _/  |_  ___________ 
- |    |   |  |  \__  \   /   |   \| __ \   __\  |  \/  ___// ___\\__  \\   __\/  _ \_  __ \
- |    |___|  |  // __ \_/    |    \ \_\ \  | |  |  /\___ \\  \___ / __ \|  | (  <_> )  | \/
- |_______ \____/(____  /\_______  /___  /__| |____//____  >\___  >____  /__|  \____/|__|   
-         \/          \/         \/    \/                \/     \/     \/                   
-          \_Welcome to LuaObfuscator.com   (Alpha 0.10.9) ~  Much Love, Ferib 
+print("Hello, world!");-- ==============================================================================
+-- 🌸✨ Carl Tool - 《一掌轟仙界》自由調整大小旗艦版 v1.9.0 (光波完美一擊99%＆全功能整合版) 🚀💎
+-- ==============================================================================
+local RAW_ASSET_ID = "135295556334883" -- 💡 您的專屬圖標 ID
+local DISCORD_INVITE_URL = "https://discord.gg/XknhQjbE4z" -- 💡 您的 Discord 連結
+local CONFIG_FILE_NAME = "CarlTool_YiZhang_Resize_Config.json"
+local LICENSE_FILE_NAME = "CarlTool_SavedKey.txt"
+local API_VERIFY_URL = "https://ttzgtusevidhswevttpn.supabase.co/functions/v1/verify-key"
+local APP_PEPPER = "Carl_9xQ7_mP2vL8_Sakura#2026!zW4n" -- 🔐 需與後端 CARL_APP_PEPPER 一致
+local _UPDATE_LOGS_DATA = {
+zh = {
+"📌 [v1.9.0 - 2026/11/24] 新增防掛機踢出（AFK 不掉線）功能",
+"  • 於「⚙️ 參數設定」分頁新增「🛡️ 防掛機踢出（AFK 不掉線）」開關（預設開啟），透過監聽 Idled 事件並模擬虛擬輸入防止 20 分鐘閒置斷線。",
+"",
+"📌 [v1.8.9 - 2026/11/24] 單次精準釋放鎖定、移除法寶檢測＆全方位防卡頓優化",
+"  • 光波完美一擊改為每輪「單次精準觸發」鎖定機制（僅觸發「發！」按鈕，移除畫面中央連點），待進度條重置後自動解鎖下一輪。",
+"  • 移除側邊欄「🎒 法寶檢測」分頁與全背包掃描負擔，並為光波條、游標、「發！」與「擺最賺」按鈕加入參考快取以消除每幀重複遍歷。",
+"  • 關閉自動孵化／放蛋時停止背景彈窗掃描，進一步節流看板統計與櫻花特效粒子上限，大幅提升長時間掛機流暢度。",
+"",
+"📌 [v1.8.8 - 2026/11/24] 融合新版光波完美一擊（99.0% 預設＆精準觸發強化）",
+"  • 取代舊版光波偵測與釋放邏輯，整合新版光波進度條游標中心百分比（預設 99.0% 即觸發）與數值 20 備援觸發。",
+"  • 移除連擊門檻延遲，達標當幀立即觸發「發！」按鈕（預設冷卻 250ms），並完整保留滑桿可調式設定。",
+"",
+"📌 [v1.8.7 - 2026/11/24] 移除自動賣裝備、補齊完整更新日誌＆版本號升級 v1.8.7",
+"  • 移除自動賣裝備開關、間隔滑桿與出售執行，同時完整保留「背景自動擺最賺」與「背景自動孵化／放蛋」邏輯。",
+"  • 補齊 v1.8.0 至 v1.8.6 中英雙語更新日誌缺漏項目（含 v1.8.0 擺最賺細節、v1.8.1 初始預設5秒、v1.8.2 絲滑UI元件、v1.8.3 合成雙擊、v1.8.5 孵化放蛋10秒、v1.8.6 光波完美一擊＆絲滑拖動）。",
+"",
+"📌 [v1.8.6 - 2026/11/23] 光波完美一擊核心整合＆視窗拖動極致絲滑化",
+"  • 將光波進度條游標中心百分比、數值偵測與「發！」按鈕精準觸發整合至主掛機循環。",
+"  • 拖動期間暫停非必要背景 UI 重排/更新干擾，並以更高跟隨阻尼與次像素 snap 處理主面板、驗證框與懸浮球拖曳。",
+"  • 拖動結束時精準對齊最終座標並自動夾取在螢幕安全範圍內，避免拖出視窗外或鬆手回彈。",
+"",
+"📌 [v1.8.5 - 2026/11/23] 孵化與放蛋初始鎖定 10 秒並支援後續自訂調整",
+"  • 「背景自動孵化」與「背景自動放蛋」間隔初始預設 10 秒（10000 ms），後續可透過滑桿自由調高或調低。",
+"",
+"📌 [v1.8.4 - 2026/11/23] 降頻節流防卡頓與櫻花特效效能最佳化",
+"  • 看板統計、系統監控文字、彈窗抑制與抽蛋背景藏圖改為節流更新，降低每幀重複掃描與字串組裝負擔。",
+"  • 櫻花特效改為控制同屏數量與降低生成頻率，減輕長時間掛機時的 UI 與動畫負擔。",
+"",
+"📌 [v1.8.3 - 2026/11/23] 自動合成 5 秒間隔雙擊觸發",
+"  • 背景自動一鍵合成在每次觸發時支援點兩下（間隔約 0.15 秒），確保合成確認與觸發更穩定。",
+"",
+"📌 [v1.8.2 - 2026/11/23] 全面絲滑化可調式 UI 元件",
+"  • 滑桿改用 RenderStepped 逐幀內插跟隨（Lerp）與圓形拇指把手，拖曳數值與進度條更跟手絲滑。",
+"  • 視窗縮放、視窗拖曳與側邊欄分頁切換加入平滑過渡與逐幀更新，並更新更新日誌日期規則。",
+"",
+"📌 [v1.8.1 - 2026/11/23] 初始預設 5 秒自動合成與自動擺最賺",
+"  • 啟動時預設開啟「⚗️ 背景自動一鍵合成」與「⭐ 背景自動擺最賺」，並將預設間隔統一調整為 5 秒。",
+"",
+"📌 [v1.8.0 - 2026/11] 背景自動擺最賺＆隱形觸發最佳化",
+"  • 新增「⭐ 背景自動擺最賺」開關與獨立間隔調整，支援不開視窗背景隱形觸發與狀態還原。",
+"  • 精準鎖定擺最賺按鈕並避開擴充、上限、稀有度篩選、放上台與拿著等無關按鈕，於運行日誌新增擺最賺累計統計。"
+},
+en = {
+"📌 [v1.9.0 - 2026/11/24] Added Anti-AFK Disconnect Protection",
+"  • Added '🛡️ Anti-AFK (No Disconnect)' toggle (enabled by default) in the Settings tab, hooking LocalPlayer.Idled with VirtualUser input to prevent 20-minute idle kicks.",
+"",
+"📌 [v1.8.9 - 2026/11/24] Single-Hit Round Lock, Removed Artifact Tab & Anti-Lag Optimization",
+"  • Upgraded Beam Perfect-Hit to single-hit per round locking (fires '發！' once without center-screen double clicks) and auto-unlocks on bar reset.",
+"  • Removed '🎒 Artifacts' tab and bag scan overhead, plus cached beam bar, marker, '發！', and 'Place Best' UI references to eliminate per-frame tree scans.",
+"  • Disabled idle toast scanning when Auto Hatch/Fill is off and throttled stats & sakura particles for smoother long-session performance.",
+"",
+"📌 [v1.8.8 - 2026/11/24] Merged New Beam Perfect-Hit (99.0% Default & Precision Trigger)",
+"  • Replaced legacy beam logic with cursor center percentage (default 99.0%) and numeric 20 fallback trigger.",
+"  • Removed streak delay for instant same-frame firing via '發！' button (250ms default cooldown), preserving adjustable sliders.",
+"",
+"📌 [v1.8.7 - 2026/11/24] Removed Auto Sell Bag, Completed Changelog & v1.8.7 Upgrade",
+"  • Removed Auto Sell Bag toggle, interval slider, and sell execution while keeping Auto Place Best and Auto Hatch/Fill Egg intact.",
+"  • Completed missing v1.8.0–v1.8.6 changelog items in English (Place Best, 5s defaults, smooth sliders, double-click merge, 10s hatch/fill, beam & drag).",
+"",
+"📌 [v1.8.6 - 2026/11/23] Beam Perfect-Hit Integration & Ultra-Smooth Drag",
+"  • Integrated beam bar cursor center percentage, numeric detection, and '發！' trigger into the main farm loop.",
+"  • Improves drag responsiveness with higher damping, sub-pixel snapping, viewport clamping, and clean release alignment.",
+"  • Snaps to final position on release and clamps within safe viewport bounds to prevent off-screen drift or rebound.",
+"",
+"📌 [v1.8.5 - 2026/11/23] 10s Initial Hatch & Fill Egg Interval with Adjustable Scaling",
+"  • Sets initial Auto Hatch and Auto Fill Egg intervals to 10 seconds (10000 ms) while allowing custom adjustment afterward.",
+"",
+"📌 [v1.8.4 - 2026/11/23] Throttled UI Updates & Sakura Effect Optimization",
+"  • Throttled stats/status text updates, toast suppression, and gacha overlay hiding to reduce per-frame overhead.",
+"  • Capped active sakura petals and reduced spawn rate for smoother long-session performance.",
+"",
+"📌 [v1.8.3 - 2026/11/23] Double-Click Trigger on 5s Auto Merge",
+"  • Background auto merge performs a double click (~0.15s apart) per trigger for more reliable merge execution.",
+"",
+"📌 [v1.8.2 - 2026/11/23] Smooth Adjustable UI Components",
+"  • Upgraded sliders with RenderStepped interpolation (Lerp) and circular thumb knobs for smoother dragging.",
+"  • Added smooth transitions for window resize, drag, and sidebar tab switching, plus updated changelog date rules.",
+"",
+"📌 [v1.8.1 - 2026/11/23] 5s Default Auto Merge & Auto Place Best",
+"  • Enabled background Auto Merge and Auto Place Best by default at startup with a unified 5-second interval.",
+"",
+"📌 [v1.8.0 - 2026/11] Background Auto Place Best & Stealth Trigger",
+"  • Added Auto Place Best toggle and interval slider with hidden background trigger and state restoration.",
+"  • Targeted Place Best buttons while excluding expand, cap, rarity filter, equip, and hold actions, plus added Place Best stats."
+}
+}
+local function generateDynamicSignature()
+local chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+local sig = "CarlResize_"
+math.randomseed(os.time() + tick())
+for i = 1, math.random(12, 24) do
+local randIndex = math.random(1, #chars)
+sig = sig .. chars:sub(randIndex, randIndex)
+end
+return sig
+end
+local _POLY_ID = generateDynamicSignature()
+local function _getExecutorName()
+if identifyexecutor then return identifyexecutor()
+elseif getexecutorname then return getexecutorname()
+elseif syn then return "Synapse X"
+elseif KRNL_LOADED then return "Krnl"
+elseif Fluxus then return "Fluxus"
+elseif Solara then return "Solara"
+elseif Delta then return "Delta"
+elseif Codex then return "Codex"
+else return "Universal Executor" end
+end
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local _VirtualInputManager = game:GetService("VirtualInputManager")
+local _GuiService = game:GetService("GuiService")
+local HttpService = game:GetService("HttpService")
+local _Stats = game:GetService("Stats")
+local TweenService = game:GetService("TweenService")
+local lp = Players.LocalPlayer
+local pg = lp:WaitForChild("PlayerGui")
 
-]]--
+-- ==============================================================================
+-- 🛡️ 緊繃防改核心：影子變數、純 Luau SHA-256、反 Hook 與分散式暗樁
+-- ==============================================================================
+local function createShadowNumber(initVal)
+    local salt = math.random(10000, 99999)
+    local raw = tonumber(initVal) or 0
+    local encoded = bit32.bxor(math.floor(raw * 1000 + 0.5), salt)
+    return {
+        set = function(v)
+            raw = tonumber(v) or 0
+            encoded = bit32.bxor(math.floor(raw * 1000 + 0.5), salt)
+        end,
+        get = function()
+            local check = bit32.bxor(encoded, salt)
+            if math.abs((raw * 1000) - check) > 1 then
+                return nil
+            end
+            return raw
+        end
+    }
+end
 
-local v0=string.char;local v1=string.byte;local v2=string.sub;local v3=bit32 or bit ;local v4=v3.bxor;local v5=table.concat;local v6=table.insert;local function v7(v451,v452) local v453={};for v692=1, #v451 do v6(v453,v0(v4(v1(v2(v451,v692,v692 + 1 )),v1(v2(v452,1 + (v692% #v452) ,1 + (v692% #v452) + 1 )))%256 ));end return v5(v453);end print(v7("\249\198\215\41\233\247\135\9\222\209\215\33\167","\126\177\163\187\69\134\219\167"));print(v7("\11\200\38\201\243\111\141\61\202\238\47\201\107","\156\67\173\74\165"));print(v7("\28\178\69\26\179\106\6\35\184\91\26\184\103","\38\84\215\41\118\220\70"));print(v7("\120\19\46\30\241\28\86\53\29\236\92\18\99","\158\48\118\66\114"));local v8=v7("\250\119\69\100\42\240\174\254\114\67\101\39\253\163\248","\155\203\68\112\86\19\197");local v9=v7("\78\201\34\236\83\34\170\183\66\212\37\255\79\106\225\182\65\218\121\196\75\118\237\201\76\223\19\168\90","\152\38\189\86\156\32\24\133");local v10=v7("\223\86\181\74\200\88\168\74\195\110\174\124\244\86\169\65\195\101\162\85\245\77\162\121\223\88\169\64\245\80\233\76\239\88\169","\38\156\55\199");local v11={[v7("\178\117","\35\200\29\28\72\115\20\154")]={"📌 [v1.5.1 - 2026/11] 金錢祈願自動抽融入","  • 新增「🥚 自動抽蛋」分頁，支援金錢祈願十連／單抽切換與 F6 快捷鍵。","  • 整合背景藏蛋動畫與右下角跳過邏輯，抽蛋過程不干擾其他介面。","  • 強化開關關閉即停機制，關閉開關或按 F6 立刻停止連抽與跳過。","  • 運行日誌新增抽蛋累計統計，並同步更新日誌內容。","","📌 [v1.5 - 2026/11] 絲滑拖動與更新日誌","  • 新增「📜 更新日誌」分頁，完整收錄所有版本更新。","  • 重寫主面板與縮小懸浮球拖動邏輯（RenderStepped 即時跟隨），消除原生拖曳卡頓。","  • 優化開關按壓回饋與滑桿拖動跟隨速度，操作無比絲滑。","","📌 [v1.4] 自由調整面板大小","  • 新增主面板右下角拖曳縮放把手，支援自訂寬高並自動儲存。","","📌 [v1.3] 運行日誌與自動存檔","  • 新增掛機計時、發射統計、法寶數量、執行器名稱與 Ping 即時監控。","  • 支援 JSON 設定檔自動讀取與儲存。","","📌 [v1.2] 法寶背包檢測與匯出","  • 支援掃描背包法寶、依品階顯示圖示與顏色、全選及一鍵複製匯出。","","📌 [v1.1] 自動掛機核心強化","  • 新增自動發射、目標百分比觸發、點擊冷卻延遲與自動往前走偏移修正。","","📌 [v1.0] 旗艦版初始發布","  • 粉白櫻花主題、櫻花飄落特效、10 種主題配色與中英雙語即時切換。"},[v7("\28\177","\84\121\223\177\191\237\76")]={"📌 [v1.5.1 - 2026/11] Coin Gacha Auto Integrated","  • Added 'Gacha' tab supporting 10x/1x pull mode toggle and F6 hotkey.","  • Integrated background hatch animation hiding & bottom-right skip without blocking UI.","  • Enforced instant stop on toggle off or F6 press with zero residual pulls.","  • Added gacha pull counter in Logs and updated changelog entries.","","📌 [v1.5 - 2026/11] Ultra-Smooth Drag & Update Log","  • Added 'Update Log' tab containing the full version history.","  • Rewrote main panel & minimized floating ball drag with RenderStepped tracking.","  • Smoothed toggle press/slide animations and slider dragging responsiveness.","","📌 [v1.4] Free Panel Resizing","  • Added bottom-right resize handle with persistent panel width & height.","","📌 [v1.3] Runtime Logs & Auto-Save","  • Added runtime timer, launch counter, artifact count, executor & ping monitor.","  • Added JSON configuration save/load support.","","📌 [v1.2] Artifact Scanner & Export","  • Added bag scanning, rarity styling, select all, and clipboard export.","","📌 [v1.1] Auto-Farm Enhancements","  • Added auto launch, target percentage trigger, click delay, and auto walk.","","📌 [v1.0] Initial Flagship Release","  • Sakura theme, falling petals, 10 color presets, and ZH/EN toggle."}};local function v12() local v454=407 -(174 + 233) ;local v455;local v456;local v457;while true do if (v454==(2 -1)) then v457=nil;while true do local v875=0 -0 ;while true do if ((0 + 0)==v875) then if (v455==(1175 -(663 + 511))) then math.randomseed(os.time() + tick() );for v990=1 + 0 ,math.random(12,24) do local v991=math.random(1 + 0 , #v456);v457=v457   .. v456:sub(v991,v991) ;end v455=2;end if ((0 -0)==v455) then v456=v7("\154\116\234\132\31\118\23\233\146\124\226\140\23\126\31\241\138\100\250\148\15\102\7\249\130\108\200\162\57\84\53\199\188\94\192\170\49\92\61\207\180\70\216\178\41\68\37\215\172\78\208\186\106\1\98\146\239\3\159\247\98\9","\161\219\54\169\192\90\48\80");v457=v7("\106\67\18\41\123\71\19\44\83\71\63","\69\41\34\96");v455=1 + 0 ;end v875=1;end if (v875==1) then if (v455==(4 -2)) then return v457;end break;end end end break;end if (v454==(0 -0)) then v455=0 + 0 ;v456=nil;v454=1 -0 ;end end end local v13=v12();local function v14() if identifyexecutor then return identifyexecutor();elseif getexecutorname then return getexecutorname();elseif syn then return v7("\143\218\217\11\18\56\185\131\239","\75\220\163\183\106\98");elseif KRNL_LOADED then return v7("\41\168\133\59","\185\98\218\235\87");elseif Fluxus then return v7("\237\48\50\254\203\185","\202\171\92\71\134\190");elseif Solara then return v7("\26\206\32\137\59\192","\232\73\161\76");elseif Delta then return v7("\159\220\78\73\31","\126\219\185\34\61");elseif Codex then return v7("\47\193\90\119\102","\135\108\174\62\18\30\23\147");else return v7("\131\231\35\221\29\188\32\198\186\169\15\211\29\173\38\211\185\251","\167\214\137\74\171\120\206\83");end end local v15=game:GetService(v7("\187\252\51\68\253\181\152","\199\235\144\82\61\152"));local v16=game:GetService(v7("\53\3\183\24\2\4\175\34\4\19","\75\103\118\217"));local v17=game:GetService(v7("\242\71\117\6\144\16\215\65\100\39\188\12\209\93\115\17","\126\167\52\16\116\217"));local v18=game:GetService(v7("\254\39\50\148\161\24\240\225\32\48\149\160\52\253\198\47\39\133\166","\156\168\78\64\224\212\121"));local v19=game:GetService(v7("\32\251\172\253\2\252\179\199\4\235","\174\103\142\197"));local v20=game:GetService(v7("\126\60\75\40\22\91\234\64\33\92\61","\152\54\72\63\88\69\62"));local v21=game:GetService(v7("\231\208\239\72\199","\60\180\164\142"));local v22=game:GetService(v7("\108\73\0\44\41\222\23\74\72\12\42\34","\114\56\62\101\73\71\141"));local v23=v15.LocalPlayer;local v24=v23:WaitForChild(v7("\136\229\218\221\189\251\252\209\177","\164\216\137\187"));local v25=v7("\200\238","\107\178\134\81\210\198\158");local v26=1 + 0 ;local v27={[v7("\8\7\140\205","\202\88\110\226\166")]=Color3.fromRGB(255,10 + 95 ,902 -(478 + 244) ),[v7("\237\10\141\249\233\218\14\140","\170\163\111\226\151")]=Color3.fromRGB(517 -(440 + 77) ,112 + 133 ,255),[v7("\63\53\189\54\126\34\59\1\60\183","\73\113\80\210\88\46\87")]=Color3.fromRGB(199,125,255),[v7("\166\35\193\22","\135\225\76\173\114")]=Color3.fromRGB(255,786 -571 ,1556 -(655 + 901) ),[v7("\61\255\189\181\162","\199\122\141\216\208\204\221")]=Color3.fromRGB(10 + 40 ,180 + 55 ,88 + 42 ),[v7("\159\216\20","\150\205\189\112\144\24")]=Color3.fromRGB(255,398 -299 ,71),[v7("\7\136\170\73","\112\69\228\223\44\100\232\113")]=Color3.fromRGB(30,1589 -(695 + 750) ,870 -615 ),[v7("\251\13\6\221\177\121","\230\180\127\103\179\214\28")]=Color3.fromRGB(393 -138 ,140,0 -0 ),[v7("\160\12\82\67","\128\236\101\63\38\132\33")]=Color3.fromRGB(173,255,398 -(285 + 66) ),[v7("\155\161\24\80\179","\175\204\201\113\36\214\139")]=Color3.fromRGB(559 -319 ,248,255)};local v28={"🌸 櫻花粉 (Sakura)","💎 電光青 (Neon Cyan)","🔮 霓虹紫 (Neon Purple)","👑 閃耀金 (Gold)","🍃 翡翠綠 (Green)","🍎 活力紅 (Red)","🌊 湛藍海 (Blue)","🍊 蜜柑橘 (Orange)","🍋 青檸黃 (Lime)","☁️ 雲朵白 (White)"};local v29={v7("\119\197\59\215","\100\39\172\85\188"),v7("\131\125\182\142\16\180\121\183","\83\205\24\217\224"),v7("\200\192\194\51\214\208\223\45\234\192","\93\134\165\173"),v7("\153\253\205\198","\30\222\146\161\162\90\174\210"),v7("\194\92\117\15\235","\106\133\46\16"),v7("\106\37\119","\32\56\64\19\156\58"),v7("\120\196\240\83","\224\58\168\133\54\58\146"),v7("\118\68\74\243\114\131","\107\57\54\43\157\21\230\231"),v7("\247\130\28\240","\175\187\235\113\149\217\188"),v7("\11\167\136\88\230","\24\92\207\225\44\131\25")};local function v30() return v27[v29[v26]] or v27.Pink ;end local v31={[v7("\106\198\172\67\55\124\94\221\187\68","\29\43\179\216\44\123")]=false,[v7("\156\204\52\67\138\216\44\71","\44\221\185\64")]=false,[v7("\53\230\90\88\118\21\215\77\77\112\4\233\92","\19\97\135\40\63")]=331 -236 ,[v7("\141\80\58\56\36\21\171\80\50\34","\81\206\60\83\91\79")]=0.35,[v7("\111\190\196\125\8\194\78\172\79","\196\46\203\176\18\79\163\45")]=false,[v7("\159\35\125\22\37\214\224\188\39","\143\216\66\30\126\68\155")]=v7("\190\205\3","\129\202\168\109\171\165\195\183"),[v7("\5\89\52\208\223\61\232\54\93\37\206\223\24\203\49","\134\66\56\87\184\190\116")]=250,[v7("\27\48\10\179\24\216\42\60\44\9","\85\92\81\105\219\121\139\65")]=16 + 74 ,[v7("\218\178\83\77\125\236\246\186\64\124","\191\157\211\48\37\28")]=90,[v7("\242\26\250\9\14\218\7\224\47\51\197\26","\90\191\127\148\124")]=10 + 5 ,[v7("\85\130\32\2\90\134\45\28\127\149\33\2\118\131\15\27\104\143\47","\119\24\231\78")]=15,[v7("\177\44\179\79\216\116\25\135\32\160\99\210\68\20\154","\113\226\77\197\42\188\32")]=1 + 0 ,[v7("\9\23\226\176\62\58\245\187\61\3\245\178\63","\213\90\118\148")]=v7("\65\38","\45\59\78\212\54"),[v7("\32\87\141\142\138\25\164\244\4\94","\144\112\54\227\235\230\78\205")]=780,[v7("\131\41\1\249\220\115\182\33\8\244\196","\59\211\72\111\156\176")]=510};local v32={[v7("\125\147\226\63\90\179\234\32\75","\77\46\231\131")]=tick(),[v7("\150\85\163\78\185\92\149\79\175\90\162","\32\218\52\214")]=0 -0 ,[v7("\105\22\50\160\240\147\74\79\64\3","\58\46\119\81\200\145\208\37")]=1375 -(1140 + 235) ,[v7("\15\137\36\169\170\169\51\47\175\63\185\167\169","\86\75\236\80\204\201\221")]=0 + 0 };local v33=0 + 0 ;local v34=false;local v35=false;local v36=0 + 0 ;local function v37(v458) return  not v35 and (v31.AutoGacha==true) and (v458==v36) ;end local function v38() return  not v35 and (v31.AutoGacha==true) ;end local function v39() local v459=0;while true do if (v459==(53 -(33 + 19))) then task.delay(0.5 + 0 ,function() v34=false;if writefile then pcall(function() local v948=0 -0 ;while true do if (v948==(1 + 0)) then writefile(v10,v20:JSONEncode(v31));break;end if (v948==(0 -0)) then v31.SavedThemeIndex=v26;v31.SavedLanguage=v25;v948=1;end end end);end end);break;end if (v459==(0 + 0)) then if v34 then return;end v34=true;v459=690 -(586 + 103) ;end end end local function v40() if (readfile and isfile and isfile(v10)) then pcall(function() local v745=v20:JSONDecode(readfile(v10));if (type(v745)==v7("\102\64\117\137\251","\235\18\33\23\229\158")) then local v918=0;while true do if (v918==2) then v25=v31.SavedLanguage or v7("\182\38","\105\204\78\203\43\167\55\126") ;break;end if (v918==(0 + 0)) then for v978,v979 in pairs(v745) do if ((v978~=v7("\113\175\213\180\124\187\212\181\83\178","\219\48\218\161")) and (v978~=v7("\197\100\104\70\236\78\236\239","\128\132\17\28\41\187\47")) and (v978~=v7("\32\39\18\53\122\0\49\14\59","\61\97\82\102\90"))) then v31[v978]=v979;end end v31.GachaIntervalMs=math.clamp(tonumber(v31.GachaIntervalMs) or (769 -519) ,60,3000);v918=1;end if (v918==(1489 -(1309 + 179))) then v31.MenuTextSize=math.clamp(tonumber(v31.MenuTextSize) or 15 ,10,39 -17 );v26=v31.SavedThemeIndex or (1 + 0) ;v918=5 -3 ;end end end end);end end v40();local v41={[v7("\191\162","\49\197\202\67\126\115\100\167")]={[v7("\27\84\216\58\180\87\92","\62\87\59\191\73\224\54")]="📊 運行日誌",[v7("\202\3\243\199\211\3\248","\169\135\98\154")]="⚡ 自動掛機",[v7("\236\118\39\92\252\7\201\201","\168\171\23\68\52\157\83")]="🥚 自動抽蛋",[v7("\214\112\242\153\36\47","\231\148\17\149\205\69\77")]="🎒 法寶檢測",[v7("\163\175\198\245\80\250\140\168\192\207\86\253","\159\224\199\167\155\55")]="📜 更新日誌",[v7("\212\245\59\230\246\241","\178\151\147\92")]="⚙️ 參數設定",[v7("\173\232\88\61\62\77\111\130\254\68","\26\236\157\44\82\114\44")]="🚀 自動發射開關",[v7("\30\47\199\92\47\58\229\88\62","\59\74\78\181")]="🎯 觸發目標百分比 (%)",[v7("\6\221\83\89\184\1\212\86\91\170","\211\69\177\58\58")]="⏳ 點擊冷卻延遲 (ms)",[v7("\150\240\109\250\222\202\187\238","\171\215\133\25\149\137")]="🚶 自動往前走 (修正偏移)",[v7("\192\221\38\245\200\49\255\74\224","\34\129\168\82\154\143\80\156")]="💰 金錢祈願自動抽 (F6)",[v7("\162\179\48\3\73\103\135\145\183\33\29\73\66","\233\229\210\83\107\40\46")]="⚡ 連抽間隔 (ms，最大3000)",[v7("\230\67\49\222\4\242\73\59\198\61","\101\161\34\82\182")]="↘️ 右下角跳過 X (%)",[v7("\207\12\90\246\218\209\137\39\248\52","\78\136\109\57\158\187\130\226")]="↘️ 右下角跳過 Y (%)",[v7("\19\48\253\244\10\58\247","\145\94\95\153")]="抽蛋模式：十連祈願",[v7("\208\194\16\208\125\190\243\202\24\208","\215\157\173\116\181\46")]="抽蛋模式：單抽祈願",[v7("\6\183\138\252\248\52\179\165\253\205","\186\85\212\235\146")]="🔍 立即重新掃描背包",[v7("\241\132\26\251\58\250\121\206\141","\56\162\225\118\158\89\142")]="☑ 全選 / 取消全選",[v7("\121\29\208\160\48\204\111\0\204\170\33\204\89\1","\184\60\101\160\207\66")]="📋 匯出選取法寶資訊",[v7("\3\135\111\185\37\177\104\189\37\145","\220\81\226\28")]="🔄 重置運行計時與數據",[v7("\48\221\131\245\237\194\31\218\133\207\227\211\31\208","\167\115\181\226\155\138")]="📜 完整版本更新日誌 (v1.0 → v1.5.1)",[v7("\196\45\233\72\72\120\220\231","\166\130\66\135\60\27\17")]="🔤 選單字體大小",[v7("\105\79\192\96\17\72\90\198\116","\80\36\42\174\21")]="🎨 背景透明度 %",[v7("\111\19\52\127\64\4\3\114\75\29\50","\26\46\112\87")]="✨ 介面主題配色",[v7("\154\44\165\114\182\184\118\181\175\38\175\89\172\184","\212\217\67\203\20\223\223\37")]="💾 參數設定已優化並自動儲存！",[v7("\149\131","\178\218\237\200")]="開",[v7("\153\179\224","\176\214\213\134")]="關"},[v7("\241\163","\57\148\205\214\180\200\54")]={[v7("\62\242\50\39\66\19\255","\22\114\157\85\84")]="📊 Logs",[v7("\233\202\26\202\105\247\170","\200\164\171\115\164\61\150")]="⚡ Farm",[v7("\153\245\0\77\130\138\245\1","\227\222\148\99\37")]="🥚 Gacha",[v7("\17\83\85\194\248\49","\153\83\50\50\150")]="🎒 Artifacts",[v7("\126\126\114\18\116\174\65\82\113\71\29\113","\45\61\22\19\124\19\203")]="📜 Changelog",[v7("\226\20\10\193\3\114","\217\161\114\109\149\98\16")]="⚙️ Settings",[v7("\51\53\44\115\144\117\7\46\59\116","\20\114\64\88\28\220")]="🚀 Auto Launch",[v7("\5\0\192\179\253\196\141\50\21","\221\81\97\178\212\152\176")]="🎯 Target Percent (%)",[v7("\238\235\20\248\17\233\226\17\250\3","\122\173\135\125\155")]="⏳ Click Delay (ms)",[v7("\165\212\20\182\8\48\196\143","\168\228\161\96\217\95\81")]="🚶 Auto Walk",[v7("\250\196\58\83\8\86\216\217\47","\55\187\177\78\60\79")]="💰 Coin Gacha Auto (F6)",[v7("\10\207\92\227\71\230\142\57\203\77\253\71\195","\224\77\174\63\139\38\175")]="⚡ Pull Interval (ms, max 3000)",[v7("\163\64\91\38\133\114\83\39\148\121","\78\228\33\56")]="↘️ Bottom-Right Skip X (%)",[v7("\233\127\177\11\132\253\117\187\19\188","\229\174\30\210\99")]="↘️ Bottom-Right Skip Y (%)",[v7("\54\226\130\84\217\56\55","\89\123\141\230\49\141\93")]=v7("\222\126\242\9\74\10\162\33\238\76\32\95\255\125","\42\147\17\150\108\112"),[v7("\34\169\41\122\212\225\1\161\33\122","\136\111\198\77\31\135")]=v7("\47\6\163\83\231\164\70\177\66\57\178\90\177","\201\98\105\199\54\221\132\119"),[v7("\138\15\130\47\32\52\171\151\3\148","\204\217\108\227\65\98\85")]="🔍 Scan Bag",[v7("\109\198\249\224\47\212\127\207\249","\160\62\163\149\133\76")]="☑ Select All",[v7("\243\184\29\32\209\194\147\8\35\198\213\180\8\43","\163\182\192\109\79")]="📋 Export Selected",[v7("\6\35\19\197\225\7\50\1\212\230","\149\84\70\96\160")]="🔄 Reset Stats",[v7("\27\14\12\227\63\3\1\226\63\50\4\249\52\3","\141\88\102\109")]="📜 Full Version Changelog (v1.0 → v1.5.1)",[v7("\149\92\196\100\41\52\79\196","\161\211\51\170\16\122\93\53")]="🔤 Font Size",[v7("\214\171\188\61\218\162\162\32\250","\72\155\206\210")]="🎨 Menu Alpha %",[v7("\103\121\87\11\61\82\78\92\11\62\67","\83\38\26\52\110")]="✨ Theme Style",[v7("\123\24\41\64\81\16\20\71\78\18\35\107\75\16","\38\56\119\71")]="💾 Settings optimized & saved!",[v7("\220\225","\54\147\143\56\182\69")]=v7("\249\175","\191\182\225\159\41"),[v7("\4\20\46","\162\75\114\72\53\235\231")]=v7("\163\26\98","\98\236\92\36\130\51")}};local function v42(v460) return v41[v25][v460] or v460 ;end local v43,v44,v45,v46,v47;local v48=Instance.new(v7("\151\26\30\191\64\166\146\37\173","\80\196\121\108\218\37\200\213"));v48.Name=v7("\35\124\16\122\116","\234\96\19\98\31\43\110")   .. v13 ;v48.ResetOnSpawn=false;v48.IgnoreGuiInset=true;v48.ZIndexBehavior=Enum.ZIndexBehavior.Sibling;pcall(function() if gethui then v48.Parent=gethui();elseif (syn and syn.protect_gui) then local v876=0;local v877;while true do if (v876==(0 + 0)) then v877=0 -0 ;while true do if (v877==(0 -0)) then syn.protect_gui(v48);v48.Parent=game:GetService(v7("\37\16\64\194\139\103\130","\235\102\127\50\167\204\18"));break;end end break;end end elseif game:GetService(v7("\115\174\231\38\99\59\89","\78\48\193\149\67\36")):FindFirstChild(v7("\2\17\130\20\78\40\57\149\17","\33\80\126\224\120")) then v48.Parent=game:GetService(v7("\207\167\17\193\123\249\161","\60\140\200\99\164"));else v48.Parent=v24;end end);if ( not v48.Parent or  not v48:IsDescendantOf(game)) then v48.Parent=v24;end local function v54(v461,v462) local v463=609 -(295 + 314) ;local v464;while true do if (v463==(2 -1)) then v464.Parent=v461;break;end if (v463==(1962 -(1300 + 662))) then v464=Instance.new(v7("\178\221\39\41\176\137\241\22","\194\231\148\100\70"));v464.CornerRadius=UDim.new(0,v462 or 24 );v463=3 -2 ;end end end local function v55(v465) local v466=1755 -(1178 + 577) ;while true do if (v466==0) then v465.MouseEnter:Connect(function() v22:Create(v465,TweenInfo.new(0.12,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{[v7("\117\69\219\166","\168\38\44\161\195\150")]=v465.Size + UDim2.new(0,3 + 1 ,0 -0 ,1407 -(851 + 554) ) }):Play();end);v465.MouseLeave:Connect(function() v22:Create(v465,TweenInfo.new(0.12 + 0 ,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{[v7("\179\245\152\115","\118\224\156\226\22\80\136\214")]=v465.Size-UDim2.new(0 -0 ,8 -4 ,0,2) }):Play();end);break;end end end local function v56(v467,v468) pcall(function() local v694=302 -(115 + 187) ;while true do if (v694==0) then v467.Image=v7("\80\236\65\129\81\253\92\148\75\234\3\207\13","\224\34\142\57")   .. tostring(v468) ;task.spawn(function() task.wait(1.5 + 0 );if (v467 and v467.Parent and  not v467.IsLoaded) then v467.Image=v7("\204\165\221\201\123\228\80\12\132\232\138\201\106\225\88\83\255\180\214\216\103\183\84\10\131","\110\190\199\165\189\19\145\61")   .. tostring(v468)   .. v7("\156\252\42\188\217\151\156\227\42\188\217\151","\167\186\139\23\136\235") ;end end);break;end end end);end local v57=nil;local v58=Vector2.zero;local v59=Vector2.zero;local v60=0;local v61=false;local v62=Vector2.zero;local v63=Vector2.new(v31.PanelWidth,v31.PanelHeight);local v64;local function v65(v469,v470) v469.Active=true;v469.Draggable=false;v469.InputBegan:Connect(function(v695) if v61 then return;end if ((v695.UserInputType==Enum.UserInputType.MouseButton1) or (v695.UserInputType==Enum.UserInputType.Touch)) then local v748=0;local v749;while true do if (v748==(0 + 0)) then v57={[v7("\28\167\137\0\31","\109\122\213\232")]=v469,[v7("\225\249\135\62\234","\80\142\151\194")]=v470};v58=Vector2.new(v695.Position.X,v695.Position.Y);v748=3 -2 ;end if (v748==(1162 -(160 + 1001))) then v749=(v469.Parent and v469.Parent.AbsolutePosition) or Vector2.zero ;v59=v469.AbsolutePosition-v749 ;v748=2 + 0 ;end if (v748==2) then v60=0;break;end end end end);end v17.InputChanged:Connect(function(v473) local v474=0 + 0 ;local v475;while true do if (v474==(0 -0)) then if ((v473.UserInputType~=Enum.UserInputType.MouseMovement) and (v473.UserInputType~=Enum.UserInputType.Touch)) then return;end v475=Vector2.new(v473.Position.X,v473.Position.Y);v474=359 -(237 + 121) ;end if (v474==1) then if v61 then return;end if (v57 and v57.frame and v57.frame.Parent) then local v919=v475-v58 ;v60=math.max(v60,v919.Magnitude);local v920=v59 + v919 ;v57.frame.Position=UDim2.new(897 -(525 + 372) ,v920.X,0 -0 ,v920.Y);end break;end end end);v17.InputEnded:Connect(function(v476) if ((v476.UserInputType==Enum.UserInputType.MouseButton1) or (v476.UserInputType==Enum.UserInputType.Touch)) then local v711=0;while true do if (v711==(0 -0)) then if v61 then v61=false;v31.PanelWidth=math.floor((v64 and v64.AbsoluteSize.X) or v31.PanelWidth );v31.PanelHeight=math.floor((v64 and v64.AbsoluteSize.Y) or v31.PanelHeight );v39();end if v57 then local v952=142 -(96 + 46) ;local v953;while true do if ((777 -(643 + 134))==v952) then local v995=0 + 0 ;while true do if (v995==(0 -0)) then v953=v57;v57=nil;v995=3 -2 ;end if (v995==(1 + 0)) then v952=1;break;end end end if (v952==(1 -0)) then if v953.onEnd then v953.onEnd(v60);end break;end end end break;end end end end);local v66=Instance.new(v7("\48\197\101\73\6\200\80\89\10","\44\99\166\23"));v66.Name=v7("\79\246\34\35\33\165\76\246\59\34\58\167\112\242\58\9","\196\28\151\73\86\83")   .. v13 ;v66.ResetOnSpawn=false;v66.IgnoreGuiInset=true;pcall(function() if gethui then v66.Parent=gethui();else v66.Parent=v48.Parent;end end);task.spawn(function() while v66 and v66.Parent and  not v35  do task.wait(math.random(30 -15 ,749 -(316 + 403) )/(7 + 3) );if v35 then break;end pcall(function() local v715=0 -0 ;local v716;local v717;local v718;while true do if ((2 + 1)==v715) then v718=v22:Create(v716,TweenInfo.new(math.random(14 -8 ,12),Enum.EasingStyle.Linear),{[v7("\136\122\241\252\153\177\122\236","\237\216\21\130\149")]=UDim2.new(v717,0 + 0 ,1.05,0 + 0 ),[v7("\176\65\75\94\164\192\81\140","\62\226\46\63\63\208\169")]=math.random( -180,623 -443 )});v718:Play();v718.Completed:Connect(function() v716:Destroy();end);break;end if (v715==1) then local v922=0 -0 ;while true do if (v922==(0 -0)) then v716.BackgroundTransparency=1 + 0 ;v716.Text="🌸";v922=1 -0 ;end if (1==v922) then v716.TextSize=math.random(14,2 + 20 );v715=5 -3 ;break;end end end if (v715==2) then v716.ZIndex=999;v716.Parent=v66;v717=v716.Position.X.Scale + (math.random( -(32 -(12 + 5)),58 -43 )/(213 -113)) ;v715=3;end if (v715==(0 -0)) then local v925=0 -0 ;while true do if (v925==(0 + 0)) then v716=Instance.new(v7("\199\6\49\4\174\89\26\115\255","\22\147\99\73\112\226\56\120"));v716.Size=UDim2.new(0,1997 -(1656 + 317) ,0 + 0 ,24);v925=1 + 0 ;end if (v925==(2 -1)) then v716.Position=UDim2.new(math.random(24 -19 ,95)/(454 -(5 + 349)) ,0, -(0.05 -0),1271 -(266 + 1005) );v715=1 + 0 ;break;end end end end end);end end);local v70=Instance.new(v7("\214\26\71\134\26\3\8\75\236","\62\133\121\53\227\127\109\79"));v70.Name=v7("\54\24\61\244\194\145","\194\112\116\82\149\182\206")   .. v13 ;v70.ResetOnSpawn=false;v70.IgnoreGuiInset=true;pcall(function() if gethui then v70.Parent=gethui();else v70.Parent=v48.Parent;end end);local v74=Instance.new(v7("\16\165\77\31\197\192\27\45\188\67\22","\110\89\200\44\120\160\130"));v74.Size=UDim2.new(0 -0 ,83 -19 ,0,1760 -(561 + 1135) );v74.Position=UDim2.new(0 -0 ,40,0 -0 ,1246 -(507 + 559) );v74.BackgroundColor3=Color3.fromRGB(639 -384 ,711 -481 ,630 -(212 + 176) );v74.ScaleType=Enum.ScaleType.Fit;v74.Active=true;v74.Draggable=false;v74.AutoButtonColor=false;v74.Visible=false;v74.ZIndex=100;v74.Parent=v70;v54(v74,20);v56(v74,v8);local v86=Instance.new(v7("\158\234\120\82\81\69\48\72","\45\203\163\43\38\35\42\91"));v86.Color=v30();v86.Thickness=907.5 -(250 + 655) ;v86.Parent=v74;v64=Instance.new(v7("\244\151\221\46\130","\52\178\229\188\67\231\201"));v64.Size=UDim2.new(0 -0 ,v31.PanelWidth,0,v31.PanelHeight);v64.Position=UDim2.new(0.5 -0 , -v31.PanelWidth/(2 -0) ,1956.5 -(1869 + 87) , -v31.PanelHeight/2 );v64.BackgroundColor3=Color3.fromRGB(884 -629 ,2141 -(484 + 1417) ,527 -281 );v64.BackgroundTransparency=v31.MenuBackgroundAlpha/(167 -67) ;v64.Active=true;v64.Draggable=false;v64.Parent=v48;v54(v64,805 -(48 + 725) );v65(v64,nil);local v97=0;v65(v74,function(v477) if (v477<6) then local v722=tick();if ((v722-v97)>0.15) then v97=v722;v64.Visible=true;v74.Visible=false;end end end);local v98=Instance.new(v7("\20\104\119\22\246\88\42\36\79\68","\67\65\33\48\100\151\60"));v98.Color=ColorSequence.new({ColorSequenceKeypoint.new(0,Color3.fromRGB(683 -428 ,131 + 94 ,238)),ColorSequenceKeypoint.new(2 -1 ,Color3.fromRGB(66 + 169 ,242,75 + 180 ))});v98.Rotation=898 -(152 + 701) ;v98.Parent=v64;local v102=Instance.new(v7("\234\206\157\204\225\208\236\171","\147\191\135\206\184"));v102.Color=v30();v102.Thickness=5;v102.Transparency=1311.5 -(430 + 881) ;v102.Parent=v64;local v107=Instance.new(v7("\177\1\149\213\202\92\185\129","\210\228\72\198\161\184\51"));v107.Color=v30();v107.Transparency=0.3;v107.Thickness=1.5 + 0 ;v107.Parent=v64;local v112=Instance.new(v7("\2\76\235\4\81\219\34\93\252\30","\174\86\41\147\112\19"));v112.Size=UDim2.new(0,919 -(557 + 338) ,0 + 0 ,67 -43 );v112.Position=UDim2.new(3 -2 , -24,2 -1 , -24);v112.BackgroundTransparency=2 -1 ;v112.Text="◢";v112.TextColor3=Color3.fromRGB(1056 -(499 + 302) ,971 -(39 + 827) ,496 -316 );v112.Font=Enum.Font.GothamBold;v112.TextSize=30 -16 ;v112.ZIndex=357 -267 ;v112.Parent=v64;v112.InputBegan:Connect(function(v478) if ((v478.UserInputType==Enum.UserInputType.MouseButton1) or (v478.UserInputType==Enum.UserInputType.Touch)) then local v723=0 -0 ;while true do if (v723==0) then v57=nil;v61=true;v723=1 + 0 ;end if ((2 -1)==v723) then v62=Vector2.new(v478.Position.X,v478.Position.Y);v63=Vector2.new(v64.AbsoluteSize.X,v64.AbsoluteSize.Y);break;end end end end);v16.RenderStepped:Connect(function() if (v61 and  not v35) then local v724=0;local v725;local v726;local v727;local v728;while true do if (v724==(0 + 0)) then v725=v17:GetMouseLocation();v726=v725-v62 ;v724=1 -0 ;end if (v724==2) then v64.Size=UDim2.new(104 -(103 + 1) ,v727,0,v728);if v47 then v47();end break;end if (v724==1) then local v927=554 -(475 + 79) ;while true do if (v927==0) then v727=math.clamp(v63.X + v726.X ,550,2377 -1277 );v728=math.clamp(v63.Y + v726.Y ,1216 -836 ,750);v927=1 + 0 ;end if (v927==(1 + 0)) then v724=1505 -(1395 + 108) ;break;end end end end end end);local v123=Instance.new(v7("\125\18\140\6\32","\203\59\96\237\107\69\111\113"));v123.Size=UDim2.new(0 -0 ,200,1205 -(7 + 1197) , -(13 + 15));v123.Position=UDim2.new(0 + 0 ,333 -(27 + 292) ,0 -0 ,14);v123.BackgroundColor3=Color3.fromRGB(325 -70 ,1048 -798 ,253);v123.BackgroundTransparency=0.35 -0 ;v123.ClipsDescendants=true;v123.ZIndex=5;v123.Parent=v64;v54(v123,45 -21 );local v131=Instance.new(v7("\17\63\159\245\35\255\220\33","\183\68\118\204\129\81\144"));v131.Color=Color3.fromRGB(394 -(43 + 96) ,775 -585 ,215);v131.Transparency=0.5;v131.Thickness=1.2 -0 ;v131.Parent=v123;local v136=Instance.new(v7("\39\160\113\227\14\174\15\175\117\232","\226\110\205\16\132\107"));v136.Size=UDim2.new(0 + 0 ,20 + 48 ,0 -0 ,68);v136.Position=UDim2.new(0.5, -(14 + 20),0 -0 ,14);v136.BackgroundTransparency=1;v136.ScaleType=Enum.ScaleType.Fit;v136.ZIndex=50;v136.Parent=v123;v56(v136,v8);local v143=Instance.new(v7("\223\198\248\205\109\234\193\229\213","\33\139\163\128\185"));v143.Size=UDim2.new(1 + 0 , -12,0 + 0 ,1775 -(1414 + 337) );v143.Position=UDim2.new(0,1946 -(1642 + 298) ,0 -0 ,247 -161 );v143.BackgroundTransparency=1;v143.Text="🌸 CARL TOOL 🌸";v143.TextColor3=Color3.fromRGB(356 -236 ,27 + 53 ,82 + 23 );v143.Font=Enum.Font.GothamBlack;v143.TextSize=986 -(357 + 615) ;v143.TextTruncate=Enum.TextTruncate.AtEnd;v143.ZIndex=36 + 14 ;v143.Parent=v123;local v156=Instance.new(v7("\113\74\5\211\82","\190\55\56\100"));v156.Size=UDim2.new(2 -1 , -(18 + 2),2 -1 , -120);v156.Position=UDim2.new(0 + 0 ,1 + 9 ,0,73 + 43 );v156.BackgroundTransparency=1;v156.ClipsDescendants=true;v156.ZIndex=1306 -(384 + 917) ;v156.Parent=v123;local v163=Instance.new(v7("\99\134\16\23\0\247\223\87\182\51\11\7","\147\54\207\92\126\115\131"));v163.SortOrder=Enum.SortOrder.LayoutOrder;v163.Padding=UDim.new(697 -(128 + 569) ,1549 -(1407 + 136) );v163.Parent=v156;local v168=Instance.new(v7("\43\35\52\112\8","\30\109\81\85\29\109"));v168.Size=UDim2.new(1888 -(687 + 1200) , -(1942 -(556 + 1154)),1, -(98 -70));v168.Position=UDim2.new(95 -(9 + 86) ,641 -(275 + 146) ,0 + 0 ,78 -(29 + 35) );v168.BackgroundTransparency=4 -3 ;v168.ZIndex=14 -9 ;v168.Parent=v64;local v174=Instance.new(v7("\217\99\85\187\51","\156\159\17\52\214\86\190"));v174.Size=UDim2.new(0 -0 ,105 + 55 ,1012 -(53 + 959) ,440 -(312 + 96) );v174.Position=UDim2.new(1 -0 , -(445 -(147 + 138)),899 -(813 + 86) ,6 + 0 );v174.BackgroundTransparency=1 -0 ;v174.ZIndex=60;v174.Parent=v168;local function v180(v479,v480,v481) local v482=492 -(18 + 474) ;local v483;while true do if (v482==(0 + 0)) then v483=Instance.new(v7("\154\234\165\168\140\250\169\168\161\225","\220\206\143\221"));v483.Size=UDim2.new(0 -0 ,1118 -(860 + 226) ,0,32);v483.Position=UDim2.new(303 -(121 + 182) ,v479,0 + 0 ,1240 -(988 + 252) );v483.BackgroundColor3=Color3.fromRGB(29 + 226 ,74 + 161 ,245);v482=1971 -(49 + 1921) ;end if (v482==2) then v483.ZIndex=950 -(223 + 667) ;v483.Parent=v174;v54(v483,64 -(51 + 1) );v55(v483);v482=5 -2 ;end if (3==v482) then return v483;end if (v482==(1 -0)) then v483.Text=v480;v483.TextColor3=v481;v483.Font=Enum.Font.GothamBold;v483.TextSize=14;v482=2;end end end local v181=v180(0,"💬",Color3.fromRGB(1239 -(146 + 979) ,39 + 98 ,218));local v182=v180(40,((v25==v7("\156\117","\178\230\29\77\119\184\172")) and v7("\208\144","\152\149\222\106\123\23")) or "中文" ,Color3.fromRGB(725 -(311 + 294) ,223 -143 ,45 + 60 ));v182.TextSize=1454 -(496 + 947) ;local v184=v180(1438 -(1233 + 125) ,"➖",Color3.fromRGB(49 + 71 ,80,95 + 10 ));local v185=v180(23 + 97 ,"❌",Color3.fromRGB(1884 -(963 + 682) ,57 + 11 ,1572 -(504 + 1000) ));v181.MouseButton1Click:Connect(function() if setclipboard then pcall(function() setclipboard(v9);end);end end);v182.MouseButton1Click:Connect(function() v25=((v25==v7("\199\46","\213\189\70\150\35")) and v7("\74\91","\104\47\53\20")) or v7("\185\68","\111\195\44\225\124\220") ;v182.Text=((v25==v7("\194\78","\203\184\38\96\19\203")) and v7("\28\93","\174\89\19\25\33")) or "中文" ;v43();v39();end);v184.MouseButton1Click:Connect(function() v64.Visible=false;v74.Visible=true;end);v185.MouseButton1Click:Connect(function() local v487=0;while true do if (v487==(2 + 0)) then v36=v36 + 1 + 0 ;pcall(function() if (v23 and v23.Character and v23.Character:FindFirstChildOfClass(v7("\7\7\95\79\249\136\2\43","\107\79\114\50\46\151\231"))) then v23.Character.Humanoid:Move(Vector3.new(0 + 0 ,0 -0 ,0 + 0 ));end end);v487=3;end if (v487==(1 + 0)) then v31.AutoWalk=false;v31.AutoGacha=false;v487=2;end if (v487==0) then v35=true;v31.AutoLaunch=false;v487=183 -(156 + 26) ;end if (v487==(2 + 1)) then pcall(function() local v881=0 -0 ;while true do if (v881==(165 -(149 + 15))) then if v48 then v48:Destroy();end break;end if (v881==(960 -(890 + 70))) then if v66 then v66:Destroy();end if v70 then v70:Destroy();end v881=1;end end end);break;end end end);local v186=Instance.new(v7("\31\180\180\36\143","\160\89\198\213\73\234\89\215"));v186.Size=UDim2.new(1,117 -(39 + 78) ,1, -46);v186.Position=UDim2.new(482 -(14 + 468) ,0,0 -0 ,128 -82 );v186.BackgroundTransparency=1 + 0 ;v186.ClipsDescendants=true;v186.ZIndex=7 + 3 ;v186.Parent=v168;local function v193(v488,v489) local v490=Instance.new(v7("\123\114\166\241\201\68\120\186\249\227\90\112\185\251","\165\40\17\212\158"));v490.Size=UDim2.new(1,0 + 0 ,1 + 0 ,0);v490.BackgroundTransparency=1 + 0 ;v490.CanvasSize=UDim2.new(0,0,0 -0 ,v489 or (554 + 6) );v490.ScrollBarThickness=4;v490.ScrollBarImageColor3=v30();v490.Visible=false;v490.ZIndex=35 -25 ;v490.Parent=v186;if v488 then local v729=Instance.new(v7("\208\240\36\58\53\241\245\9\42\41\240\205","\70\133\185\104\83"));v729.SortOrder=Enum.SortOrder.LayoutOrder;v729.Padding=UDim.new(0 + 0 ,12);v729.Parent=v490;end return v490;end local v194=v193(true,471 -(12 + 39) );local v195=v193(true,428 + 32 );local v196=v193(false,0 -0 );local v197=v193(true,1638 -1178 );local v198=v193(true,244 + 576 );local v199=v193(true,222 + 198 );v194.Visible=true;local v201={};local function v202(v499,v500,v501,v502) local v503=Instance.new(v7("\48\64\92\62\235\17\81\80\37\199","\169\100\37\36\74"));v503.Size=UDim2.new(2 -1 ,0 + 0 ,0,193 -153 );v503.BackgroundColor3=(v502 and Color3.fromRGB(1965 -(1596 + 114) ,220,238)) or Color3.fromRGB(665 -410 ,242,248) ;v503.BackgroundTransparency=(v502 and (713.2 -(164 + 549))) or 0.5 ;v503.Text=v7("\64\199\226","\48\96\231\194")   .. v42(v499) ;v503.TextColor3=(v502 and Color3.fromRGB(1618 -(1059 + 379) ,50,136 -26 )) or Color3.fromRGB(58 + 52 ,16 + 74 ,105) ;v503.Font=Enum.Font.GothamMedium;v503.TextSize=math.clamp(v31.MenuTextSize,403 -(145 + 247) ,14 + 2 );v503.TextXAlignment=Enum.TextXAlignment.Left;v503.TextTruncate=Enum.TextTruncate.AtEnd;v503.TextWrapped=false;v503.ZIndex=10 + 10 ;v503.LayoutOrder=v501;v503.Parent=v156;v54(v503,46 -30 );v55(v503);local v520=Instance.new(v7("\253\115\62\44\29\220\166\141\207","\227\168\58\110\77\121\184\207"));v520.PaddingLeft=UDim.new(0,2 + 4 );v520.PaddingRight=UDim.new(0,6);v520.Parent=v503;v503.MouseButton1Click:Connect(function() for v734,v735 in ipairs({v194,v195,v196,v197,v198,v199}) do if (v735==v500) then local v882=0;while true do if (v882==1) then v22:Create(v735,TweenInfo.new(628.18 -(294 + 334) ,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{[v7("\75\51\172\73\165\210\126\171","\197\27\92\223\32\209\187\17")]=UDim2.new(253 -(236 + 17) ,0,0 + 0 ,0 + 0 )}):Play();break;end if (v882==0) then v735.Visible=true;v735.Position=UDim2.new(3 -2 ,0,0,0 -0 );v882=1 + 0 ;end end else v735.Visible=false;end end for v736,v737 in ipairs(v201) do local v738=0 + 0 ;while true do if (v738==(794 -(413 + 381))) then v737.Btn.BackgroundColor3=((v737.Btn==v503) and Color3.fromRGB(255,10 + 210 ,505 -267 )) or Color3.fromRGB(662 -407 ,2212 -(582 + 1388) ,248) ;v737.Btn.BackgroundTransparency=((v737.Btn==v503) and (0.2 -0)) or (0.5 + 0) ;v738=365 -(326 + 38) ;end if (v738==1) then v737.Btn.TextColor3=((v737.Btn==v503) and Color3.fromRGB(532 -352 ,71 -21 ,110)) or Color3.fromRGB(730 -(47 + 573) ,32 + 58 ,445 -340 ) ;break;end end end end);table.insert(v201,{[v7("\33\75\205","\155\99\63\163")]=v503,[v7("\169\212\184","\228\226\177\193\237\217")]=v499});return v503;end v202(v7("\25\177\42\232\0\177\33","\134\84\208\67"),v194,1 -0 ,true);v202(v7("\52\173\133\84\18\152\135\94","\60\115\204\230"),v195,1666 -(1269 + 395) ,false);v202(v7("\197\59\236\68\230\56","\16\135\90\139"),v196,495 -(76 + 416) ,false);v202(v7("\120\123\1\32\122\85\122","\24\52\20\102\83\46\52"),v197,4,false);v202(v7("\231\39\32\42\8\193\35\46\35\59\197\45","\111\164\79\65\68"),v198,448 -(319 + 124) ,false);v202(v7("\229\223\132\234\47\232","\138\166\185\227\190\78"),v199,13 -7 ,false);function v47() local v524=1007 -(564 + 443) ;local v525;local v526;local v527;local v528;local v529;while true do if (v524==0) then v525=0 -0 ;v526=nil;v524=459 -(337 + 121) ;end if (v524==(5 -3)) then v529=nil;while true do if (v525==(3 -2)) then v527= #v201;if (v527<=(1911 -(1261 + 650))) then return;end v525=1 + 1 ;end if (v525==(3 -0)) then v529=math.clamp(math.floor((v526-(v528 * (v527-(1818 -(772 + 1045)))))/v527 ),4 + 24 ,42);for v956,v957 in ipairs(v201) do local v958=144 -(102 + 42) ;local v959;while true do if ((1845 -(1524 + 320))==v958) then v957.Btn.TextSize=math.min(v959,math.max(11,v529-(1282 -(1049 + 221)) ));break;end if (v958==(156 -(18 + 138))) then v957.Btn.Size=UDim2.new(2 -1 ,1102 -(67 + 1035) ,348 -(136 + 212) ,v529);v959=math.clamp(v31.MenuTextSize,11,16);v958=1;end end end break;end if (v525==(0 -0)) then v526=v156.AbsoluteSize.Y;if (v526<=(0 + 0)) then return;end v525=1 + 0 ;end if (v525==(1606 -(240 + 1364))) then v528=math.clamp(math.floor(v526 * (1082.014 -(1050 + 32)) ),3,21 -15 );v163.Padding=UDim.new(0,v528);v525=2 + 1 ;end end break;end if (v524==(1056 -(331 + 724))) then v527=nil;v528=nil;v524=1 + 1 ;end end end task.defer(v47);local v203={};local function v204(v530,v531,v532,v533,v534) local v535=Instance.new(v7("\237\102\196\58\87","\121\171\20\165\87\50\67"));v535.Size=UDim2.new(645 -(269 + 375) , -(731 -(267 + 458)),0,18 + 38 );v535.BackgroundColor3=Color3.fromRGB(490 -235 ,1063 -(667 + 151) ,250);v535.BackgroundTransparency=0.3;v535.ClipsDescendants=true;v535.ZIndex=1512 -(1410 + 87) ;v535.Parent=v530;v54(v535,16);local v542=Instance.new(v7("\243\17\138\34\171\13\205\61","\98\166\88\217\86\217"));v542.Color=Color3.fromRGB(2152 -(1504 + 393) ,567 -357 ,596 -366 );v542.Transparency=0.6;v542.Thickness=797 -(461 + 335) ;v542.Parent=v535;local v547=Instance.new(v7("\194\243\97\21\170\221\244\243\117","\188\150\150\25\97\230"));v547.Size=UDim2.new(1, -104,1,0 + 0 );v547.Position=UDim2.new(1761 -(1730 + 31) ,18,0,1667 -(728 + 939) );v547.BackgroundTransparency=3 -2 ;v547.Text=v42(v531);v547.TextColor3=Color3.fromRGB(182 -92 ,160 -90 ,85);v547.Font=Enum.Font.GothamMedium;v547.TextSize=v31.MenuTextSize;v547.TextXAlignment=Enum.TextXAlignment.Left;v547.TextTruncate=Enum.TextTruncate.AtEnd;v547.TextWrapped=false;v547.ZIndex=1084 -(138 + 930) ;v547.Parent=v535;table.insert(v203,{[v7("\245\139\85","\141\186\233\63\98\108")]=v547,[v7("\218\239\53","\69\145\138\76\214")]=v531,[v7("\93\206\145\186\182\12\117","\118\16\175\233\233\223")]=17 + 1 });local v564=Instance.new(v7("\191\129\45\175\204\158\105\159\139\59","\29\235\228\85\219\142\235"));v564.Size=UDim2.new(0 + 0 ,54 + 8 ,0 -0 ,1800 -(459 + 1307) );v564.Position=UDim2.new(1871 -(474 + 1396) , -74,0.5 -0 , -(16 + 1));v564.BackgroundColor3=(v532 and Color3.fromRGB(46,1 + 203 ,323 -210 )) or Color3.fromRGB(28 + 192 ,205,717 -502 ) ;v564.AutoButtonColor=false;v564.Text="";v564.ZIndex=69 -53 ;v564.Parent=v535;v54(v564,17);local v572=Instance.new(v7("\27\198\187\208\114","\50\93\180\218\189\23\46\71"));v572.Size=UDim2.new(0,619 -(562 + 29) ,0 + 0 ,1447 -(374 + 1045) );v572.Position=(v532 and UDim2.new(1, -31,0.5, -14)) or UDim2.new(0 + 0 ,9 -6 ,638.5 -(448 + 190) , -(5 + 9)) ;v572.BackgroundColor3=Color3.new(1 + 0 ,1 + 0 ,3 -2 );v572.ZIndex=52 -35 ;v572.Parent=v564;v54(v572,14);local v578=v532;local function v579(v696,v697) v578= not  not v696;local v698=(v578 and Color3.fromRGB(1540 -(1307 + 187) ,808 -604 ,113)) or Color3.fromRGB(515 -295 ,205,215) ;local v699=(v578 and UDim2.new(1, -31,0.5 -0 , -14)) or UDim2.new(683 -(232 + 451) ,3 + 0 ,0.5, -(13 + 1)) ;v22:Create(v564,TweenInfo.new(564.14 -(510 + 54) ,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{[v7("\252\165\88\71\67\206\71\203\170\95\111\75\208\71\204\247","\40\190\196\59\44\36\188")]=v698}):Play();v22:Create(v572,TweenInfo.new(0.14 -0 ,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{[v7("\12\74\207\189\238\116\2\50","\109\92\37\188\212\154\29")]=v699,[v7("\55\230\190\198","\58\100\143\196\163\81")]=UDim2.new(36 -(13 + 23) ,30,0 -0 ,28)}):Play();task.delay(0.08,function() if (v572 and v572.Parent) then v22:Create(v572,TweenInfo.new(0.1,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{[v7("\41\75\57\166","\110\122\34\67\195\95\41\133")]=UDim2.new(0,28,0 -0 ,50 -22 )}):Play();end end);if  not v697 then v533(v578);v39();end end v564.MouseButton1Click:Connect(function() v579( not v578,false);end);if v534 then v534(function(v763) v579(v763,true);end);end table.insert(v203,{[v7("\65\190\92\77\218\112\147\79\68","\182\21\209\59\42")]=v564,[v7("\156\89\202\31","\222\215\55\165\125\65")]=v572,[v7("\11\212\210\41\230\192\249\79","\42\76\177\166\122\146\161\141")]=function() return v578;end});end local function v205(v580,v581,v582,v583,v584,v585) local v586=1088 -(830 + 258) ;local v587;local v588;local v589;local v590;local v591;local v592;local v593;local v594;local v595;local v596;while true do if (v586==4) then v590.TextColor3=Color3.fromRGB(634 -454 ,32 + 18 ,94 + 16 );v590.Font=Enum.Font.Code;v590.TextSize=v31.MenuTextSize;v590.TextXAlignment=Enum.TextXAlignment.Right;v590.TextTruncate=Enum.TextTruncate.AtEnd;v590.ZIndex=1457 -(860 + 581) ;v590.Parent=v587;table.insert(v203,{[v7("\107\180\174\165\82\173","\231\61\213\194")]=v590,[v7("\36\172\37\64\0\183\56","\19\105\205\93")]=66 -48 });v586=4 + 1 ;end if (v586==6) then v593=math.clamp((v582-v583)/(v584-v583) ,0,1);v592.Size=UDim2.new(v593,241 -(237 + 4) ,2 -1 ,0 -0 );v592.BackgroundColor3=Color3.fromRGB(483 -228 ,86 + 19 ,104 + 76 );v592.ZIndex=64 -47 ;v592.Parent=v591;v54(v592,3 + 2 );table.insert(v203,{[v7("\222\242\4\247\253\197\203\247\1\255","\183\141\158\109\147\152")]=v592});v594=false;v586=7;end if ((2 + 0)==v586) then v589.BackgroundTransparency=1;v589.Text=v42(v581);v589.TextColor3=Color3.fromRGB(1516 -(85 + 1341) ,119 -49 ,240 -155 );v589.Font=Enum.Font.GothamMedium;v589.TextSize=v31.MenuTextSize;v589.TextXAlignment=Enum.TextXAlignment.Left;v589.TextTruncate=Enum.TextTruncate.AtEnd;v589.TextWrapped=false;v586=375 -(45 + 327) ;end if (v586==3) then v589.ZIndex=29 -13 ;v589.Parent=v587;table.insert(v203,{[v7("\139\226\71","\96\196\128\45\211\132")]=v589,[v7("\30\136\98","\184\85\237\27\63\178\207\212")]=v581,[v7("\37\88\17\108\1\67\12","\63\104\57\105")]=520 -(444 + 58) });v590=Instance.new(v7("\63\130\188\80\39\134\166\65\7","\36\107\231\196"));v590.Size=UDim2.new(0,34 + 44 ,0 + 0 ,24);v590.Position=UDim2.new(1 + 0 , -(278 -182),0,1742 -(64 + 1668) );v590.BackgroundTransparency=1;v590.Text=tostring(v582);v586=4;end if (v586==(1974 -(1227 + 746))) then v588=Instance.new(v7("\24\29\150\200\100\160\220\131","\230\77\84\197\188\22\207\183"));v588.Color=Color3.fromRGB(783 -528 ,389 -179 ,724 -(415 + 79) );v588.Transparency=0.6;v588.Thickness=1 + 0 ;v588.Parent=v587;v589=Instance.new(v7("\205\17\222\232\160\160\242\48\245","\85\153\116\166\156\236\193\144"));v589.Size=UDim2.new(1, -(601 -(142 + 349)),0 + 0 ,32 -8 );v589.Position=UDim2.new(0 + 0 ,13 + 5 ,0 -0 ,10);v586=2;end if (v586==(1871 -(1710 + 154))) then v595=v582;v596=nil;function v596(v884) local v885=0;local v886;local v887;local v888;while true do if (v885==(318 -(200 + 118))) then v886=math.clamp((v884-v591.AbsolutePosition.X)/math.max(v591.AbsoluteSize.X,1 + 0 ) ,0 -0 ,1 -0 );v887=math.floor(v583 + ((v584-v583) * v886) + 0.5 );v885=1 + 0 ;end if ((1 + 0)==v885) then v888=(v887-v583)/math.max(v584-v583 ,1 + 0 ) ;v592.Size=UDim2.new(math.clamp(v888,0 + 0 ,2 -1 ),0,1251 -(363 + 887) ,0 -0 );v885=9 -7 ;end if (v885==(1 + 1)) then v590.Text=tostring(v887);if (v887~=v595) then local v980=0 -0 ;while true do if (v980==(0 + 0)) then v595=v887;v585(v887);break;end end end break;end end end v591.InputBegan:Connect(function(v889) if ((v889.UserInputType==Enum.UserInputType.MouseButton1) or (v889.UserInputType==Enum.UserInputType.Touch)) then local v936=1664 -(674 + 990) ;while true do if ((0 + 0)==v936) then v57=nil;v594=true;v936=1;end if (v936==1) then v596(v889.Position.X);break;end end end end);v17.InputChanged:Connect(function(v890) if (v594 and ((v890.UserInputType==Enum.UserInputType.MouseMovement) or (v890.UserInputType==Enum.UserInputType.Touch))) then v596(v890.Position.X);end end);v17.InputEnded:Connect(function(v891) if ((v891.UserInputType==Enum.UserInputType.MouseButton1) or (v891.UserInputType==Enum.UserInputType.Touch)) then if v594 then local v974=0;while true do if (v974==(0 + 0)) then v594=false;v39();break;end end end end end);break;end if (v586==5) then v591=Instance.new(v7("\143\26\223\140\58","\95\201\104\190\225"));v591.Size=UDim2.new(1 -0 , -36,1055 -(507 + 548) ,847 -(289 + 548) );v591.Position=UDim2.new(1818 -(821 + 997) ,18,255 -(195 + 60) ,12 + 29 );v591.BackgroundColor3=Color3.fromRGB(1736 -(251 + 1250) ,629 -414 ,155 + 70 );v591.ZIndex=1048 -(809 + 223) ;v591.Parent=v587;v54(v591,5);v592=Instance.new(v7("\137\217\192\195\170","\174\207\171\161"));v586=8 -2 ;end if (v586==(0 -0)) then v587=Instance.new(v7("\131\152\4\195\124","\22\197\234\101\174\25"));v587.Size=UDim2.new(3 -2 , -(5 + 1),0 + 0 ,681 -(14 + 603) );v587.BackgroundColor3=Color3.fromRGB(255,245,379 -(118 + 11) );v587.BackgroundTransparency=0.3 + 0 ;v587.ClipsDescendants=true;v587.ZIndex=15;v587.Parent=v580;v54(v587,16);v586=1 + 0 ;end end end local v206="🌸 狀態：待機中 (Standby)...";v204(v194,v7("\13\28\242\3\0\8\243\2\47\1","\108\76\105\134"),v31.AutoLaunch,function(v597) local v598=0 -0 ;local v599;while true do if ((949 -(551 + 398))==v598) then v599=0 + 0 ;while true do if (v599==(0 + 0)) then v31.AutoLaunch=v597;if  not v597 then v206="⏸️ 狀態：已暫停 (Paused)";end break;end end break;end end end);v205(v194,v7("\223\196\163\230\203\255\245\178\245","\174\139\165\209\129"),v31.TargetPercent,41 + 9 ,371 -271 ,function(v600) v31.TargetPercent=v600;end);v205(v194,v7("\128\191\235\194\205\39\117\116\162\170","\24\195\211\130\161\166\99\16"),math.floor(v31.ClickDelay * 1000 ),230 -130 ,325 + 675 ,function(v602) v31.ClickDelay=v602/(3969 -2969) ;end);v204(v194,v7("\103\22\253\35\100\23\74\8","\118\38\99\137\76\51"),v31.AutoWalk,function(v604) local v605=0 + 0 ;while true do if (v605==(89 -(40 + 49))) then v31.AutoWalk=v604;if  not v604 then pcall(function() v23.Character.Humanoid:Move(Vector3.new(0,0,0 -0 ));end);end break;end end end);local v207=nil;function v46(v606) local v607=490 -(99 + 391) ;local v608;while true do if ((1 + 0)==v607) then v36=v36 + (4 -3) ;if v207 then v207(v608);end v607=2;end if (v607==2) then if  not v608 then v206="⏸️ 金錢祈願自動抽已停止";end break;end if (0==v607) then v608= not  not v606;v31.AutoGacha=v608;v607=2 -1 ;end end end v204(v195,v7("\220\51\17\29\46\33\254\46\4","\64\157\70\101\114\105"),v31.AutoGacha,function(v609) v46(v609);end,function(v610) v207=v610;end);local v208=Instance.new(v7("\116\173\191\247\50\85\188\179\236\30","\112\32\200\199\131"));v208.Size=UDim2.new(1 + 0 , -(15 -9),1604 -(1032 + 572) ,461 -(203 + 214) );v208.BackgroundColor3=Color3.fromRGB(255,2042 -(568 + 1249) ,187 + 51 );v208.Text=v42(((v31.GachaMode==v7("\63\89\82\191\207\174","\66\76\48\60\216\163\203")) and v7("\151\137\125\246\108\199\42\189\138\124","\68\218\230\25\147\63\174")) or v7("\128\37\87\73\130\168\36","\214\205\74\51\44") );v208.TextColor3=Color3.fromRGB(384 -224 ,193 -143 ,1406 -(913 + 393) );v208.Font=Enum.Font.GothamBold;v208.TextSize=v31.MenuTextSize;v208.TextTruncate=Enum.TextTruncate.AtEnd;v208.TextWrapped=false;v208.ZIndex=42 -27 ;v208.Parent=v195;v54(v208,21 -5 );v55(v208);table.insert(v203,{[v7("\213\78\232","\23\154\44\130\156")]=v208,[v7("\60\167\181\157\63\9\20","\115\113\198\205\206\86")]=18,[v7("\167\66\237\78\139\90\204\95\130\69\251\73\140","\58\228\55\158")]=function() v208.Text=v42(((v31.GachaMode==v7("\167\128\222\41\48\168","\85\212\233\176\78\92\205")) and v7("\103\87\140\231\121\81\134\229\70\93","\130\42\56\232")) or v7("\199\186\32\230\116\58\228","\95\138\213\68\131\32") );end});v208.MouseButton1Click:Connect(function() v31.GachaMode=((v31.GachaMode==v7("\62\45\175","\22\74\72\193\35")) and v7("\63\112\234\95\32\124","\56\76\25\132")) or v7("\74\196\165","\175\62\161\203\70") ;v208.Text=v42(((v31.GachaMode==v7("\47\212\205\20\57\57","\85\92\189\163\115")) and v7("\4\163\52\61\26\165\62\63\37\169","\88\73\204\80")) or v7("\3\140\20\67\29\223\32","\186\78\227\112\38\73") );v39();end);v205(v195,v7("\219\86\254\93\82\83\242\67\248\71\69\123\240","\26\156\55\157\53\51"),v31.GachaIntervalMs,470 -(269 + 141) ,6672 -3672 ,function(v614) v31.GachaIntervalMs=v614;end);v205(v195,v7("\171\217\21\209\185\99\135\209\6\225","\48\236\184\118\185\216"),v31.GachaSkipX,50,2079 -(362 + 1619) ,function(v616) v31.GachaSkipX=v616;end);v205(v195,v7("\194\188\84\56\206\7\238\180\71\9","\84\133\221\55\80\175"),v31.GachaSkipY,50,98,function(v618) v31.GachaSkipY=v618;end);v17.InputBegan:Connect(function(v620,v621) local v622=1625 -(950 + 675) ;while true do if ((0 + 0)==v622) then if (v35 or v621) then return;end if (v620.KeyCode==Enum.KeyCode.F6) then v46( not v31.AutoGacha);end break;end end end);local v220={[v7("\144\230\45\168\242\117","\60\221\135\68\198\167")]=true,[v7("\205\181\249\151","\185\142\221\152\227\34")]=true,[v7("\122\208\85\248\79\54\212\80\196\67","\151\56\165\55\154\35\83")]=true};local function v221(v623,v624,v625) if  not v37(v625) then return;end pcall(function() if (v18 and v18.SendMouseButtonEvent) then local v816=0;while true do if (v816==(1179 -(216 + 963))) then v18:SendMouseButtonEvent(v623,v624,0,true,game,1288 -(485 + 802) );task.wait(0.01);v816=1;end if (v816==(560 -(432 + 127))) then if  not v37(v625) then return;end v18:SendMouseButtonEvent(v623,v624,0,false,game,1074 -(1065 + 8) );break;end end elseif (mouse1click and v37(v625)) then mouse1click();end end);end local function v222(v626,v627) local v628=0;local v629;local v630;local v631;local v632;while true do local v700=0 + 0 ;while true do if (v700==0) then if ((1603 -(635 + 966))==v628) then if  not v37(v627) then return false;end v630=v19:GetGuiInset();v628=3 + 0 ;end if (v628==(45 -(5 + 37))) then local v938=0 -0 ;while true do if (v938==1) then v628=4;break;end if (v938==0) then v631=v626.AbsolutePosition.X + (v626.AbsoluteSize.X/(1 + 1)) ;v632=v626.AbsolutePosition.Y + (v626.AbsoluteSize.Y/(2 -0)) + v630.Y ;v938=1;end end end v700=1;end if (v700==(1 + 0)) then if (v628==(1 -0)) then local v939=0 -0 ;while true do if (v939==(1 -0)) then v628=2;break;end if (v939==0) then v629=false;if getconnections then for v1015,v1016 in ipairs({v7("\251\122\60\176\226\174\185\2\194\122\39\242\196\128\165\21\221","\118\182\21\73\195\135\236\204"),v7("\41\63\14\73\18\12\233\13\56","\157\104\92\122\32\100\109")}) do if  not v37(v627) then return false;end pcall(function() for v1030,v1031 in ipairs(getconnections(v626[v1016])) do if  not v37(v627) then break;end if v1031.Fire then local v1050=529 -(318 + 211) ;while true do if (v1050==0) then v1031:Fire();v629=true;break;end end elseif v1031.Function then v1031.Function();v629=true;end end end);if v629 then break;end end end v939=1;end end end if (v628==4) then local v940=0 -0 ;while true do if (v940==(1587 -(963 + 624))) then if ((v631>(0 + 0)) and (v632>0)) then local v1008=846 -(518 + 328) ;while true do if (v1008==0) then v221(v631,v632,v627);return true;end end end return v629;end end end v700=2;end if (v700==(4 -2)) then if (v628==(0 -0)) then if  not v37(v627) then return false;end if ( not v626 or  not v626.Parent or  not v626:IsA(v7("\135\86\12\204\181\87\17\225\174","\142\192\35\101")) or  not v626.Visible) then return false;end v628=318 -(301 + 16) ;end break;end end end end local function v223(v633) if  not v37(v633) then return;end local v634=workspace.CurrentCamera;local v635=(v634 and v634.ViewportSize) or Vector2.new(1280,2110 -1390 ) ;local v636=v19:GetGuiInset();local v637=v635.X * (v31.GachaSkipX/(280 -180)) ;local v638=v635.Y * (v31.GachaSkipY/(260 -160)) ;v221(v637,v638,v633);if (v37(v633) and (v636.Y>(0 + 0))) then v221(v637,v638 + v636.Y ,v633);end end local function v224(v639) local v640=v24:FindFirstChild(v7("\147\163\219\237\60\36\133\170\132\179\198","\203\195\198\175\170\93\71\237"));local v641=v640 and v640:FindFirstChild(v7("\30\78\42\242\80\18\244\47\123\63\219\84\29","\156\78\43\94\181\49\113")) and v640.PetGachaPanel:FindFirstChild(v7("\80\231\220","\25\18\136\164\195\107\35")) ;if  not v641 then return false;end return (v639==v641) or v639:IsDescendantOf(v641) ;end local function v225() if  not v38() then return;end local v642=workspace.CurrentCamera;local v643=(v642 and v642.ViewportSize) or Vector2.new(727 + 553 ,1537 -817 ) ;local v644=Vector2.new(v643.X * 0.5 ,v643.Y * (0.5 + 0) );for v701,v702 in ipairs(v24:GetChildren()) do if  not v38() then return;end if (v702:IsA(v7("\219\46\187\74\119\178\230\173\225","\216\136\77\201\47\18\220\161")) and v702.Enabled and  not v220[v702.Name]) then for v892,v893 in ipairs(v702:GetDescendants()) do if  not v38() then return;end if ( not v224(v893) and v893:IsA(v7("\10\249\34\245\10\214\135\46\248","\226\77\140\75\186\104\188"))) then if v893:IsA(v7("\154\207\222\41\78\170\233\194\48\90\169","\47\217\174\176\95")) then if (v893.GroupTransparency<(1 + 0)) then v893.GroupTransparency=3 -2 ;end elseif v893.Visible then local v999=v893.AbsolutePosition + (v893.AbsoluteSize * (0.5 + 0)) ;local v1000=((v999-v644).Magnitude<(v643.Y * (1019.36 -(829 + 190)))) and (v893.AbsoluteSize.X>(392 -282)) and (v893.AbsoluteSize.Y>(139 -29)) ;local v1001=(v893.AbsoluteSize.X>(v643.X * 0.65)) and (v893.AbsoluteSize.Y>(v643.Y * 0.65)) ;if (v1000 or v1001) then v893.Visible=false;end end end end end end end local function v226() local v645=0;local v646;local v647;local v648;local v649;local v650;local v651;while true do if (v645==(0 -0)) then v646=v24:FindFirstChild(v7("\136\216\98\37\179\87\112\39\159\200\127","\70\216\189\22\98\210\52\24"));v647=v646 and v646:FindFirstChild(v7("\234\218\183\160\210\217\215\162\183\210\212\218\175","\179\186\191\195\231")) and v646.PetGachaPanel:FindFirstChild(v7("\219\48\0","\132\153\95\120")) ;v645=1;end if (v645==(4 -2)) then v649=v647:FindFirstChild(v7("\208\2\37\236\220\203\233\13","\164\128\99\66\137\159"));v650=v649 and v649:FindFirstChild(v7("\44\140\239\170","\222\96\233\137")) ;v645=3;end if (1==v645) then if  not v647 then return nil,nil;end v648=v647:FindFirstChild(v7("\133\179\12\18\244\213\169\191","\192\209\210\110\77\151\186"));v645=1 + 1 ;end if (v645==(1 + 2)) then v651=v650 and v650:FindFirstChild(((v31.GachaMode==v7("\170\186\169\24\132\246","\144\217\211\199\127\232\147")) and v7("\219\32\55\38\132","\36\152\79\94\72\181\37\98")) or v7("\244\215\78\49\134\136","\95\183\184\39") ) ;return v648,v651;end end end task.spawn(function() while  not v35 do local v703=0;local v704;while true do if (v703==(2 -1)) then task.wait(math.max(0.08 + 0 ,v31.GachaIntervalMs/1000 ));break;end if (v703==0) then local v894=613 -(520 + 93) ;while true do if (v894==0) then v704=v36;if v37(v704) then local v981=276 -(259 + 17) ;local v982;local v983;while true do if (v981==(0 + 0)) then v982,v983=v226();if v37(v704) then if (v983 and v983.Visible) then if (v222(v983,v704) and v37(v704)) then v32.GachaCount=v32.GachaCount + (((v31.GachaMode==v7("\166\54\233\33\88\133","\98\213\95\135\70\52\224")) and (1 + 0)) or (33 -23)) ;v206=string.format("🥚 金錢祈願連抽中 (%s) | 累計: %d",((v31.GachaMode==v7("\237\170\199\112\88\251","\52\158\195\169\23")) and "單抽") or "十連" ,v32.GachaCount);end elseif (v982 and v982.Visible) then v222(v982,v704);else v223(v704);end end break;end end end v894=592 -(396 + 195) ;end if (v894==(2 -1)) then v703=1762 -(440 + 1321) ;break;end end end end end end);v196.CanvasSize=UDim2.new(1829 -(1059 + 770) ,0,0 -0 ,545 -(424 + 121) );v196.ScrollingEnabled=false;local v229=Instance.new(v7("\92\174\51\121\131","\235\26\220\82\20\230\85\27"));v229.Size=UDim2.new(1 + 0 , -(1353 -(641 + 706)),0 + 0 ,486 -(249 + 191) );v229.Position=UDim2.new(0 -0 ,0,0 + 0 ,0 -0 );v229.BackgroundTransparency=428 -(183 + 244) ;v229.ZIndex=15;v229.Parent=v196;local v235=Instance.new(v7("\188\164\241\214\86\157\181\253\205\122","\20\232\193\137\162"));v235.Size=UDim2.new(1 + 0 ,0,731 -(434 + 296) ,0);v235.BackgroundColor3=Color3.fromRGB(813 -558 ,215,230);v235.Text=v42(v7("\17\220\196\168\197\141\16\95\45\200","\17\66\191\165\198\135\236\119"));v235.TextColor3=Color3.fromRGB(160,562 -(169 + 343) ,100);v235.Font=Enum.Font.GothamBold;v235.TextSize=v31.MenuTextSize;v235.TextTruncate=Enum.TextTruncate.AtEnd;v235.ZIndex=15 + 1 ;v235.Parent=v229;v54(v235,27 -11 );v55(v235);table.insert(v203,{[v7("\32\173\164","\177\111\207\206\115\159\136\140")]=v235,[v7("\46\140\9","\63\101\233\112\116\180\47")]=v7("\240\56\236\28\218\55\196\21\226\5","\86\163\91\141\114\152"),[v7("\126\10\108\64\51\73\14","\90\51\107\20\19")]=52 -34 });local v245=Instance.new(v7("\190\243\151\224\49\129\249\139\232\27\159\241\136\234","\93\237\144\229\143"));v245.Size=UDim2.new(1 + 0 , -6,1, -(357 -231));v245.Position=UDim2.new(1123 -(651 + 472) ,0 + 0 ,0 + 0 ,65 -11 );v245.BackgroundColor3=Color3.fromRGB(255,728 -(397 + 86) ,1126 -(423 + 453) );v245.BackgroundTransparency=0.4;v245.CanvasSize=UDim2.new(0,0,0 + 0 ,0 + 0 );v245.ScrollBarThickness=4;v245.ScrollBarImageColor3=v30();v245.ZIndex=14 + 1 ;v245.Parent=v196;v54(v245,13 + 3 );local v255=Instance.new(v7("\32\223\220\16\24\82\57\247\233\22\30\82","\38\117\150\144\121\107"));v255.SortOrder=Enum.SortOrder.LayoutOrder;v255.Padding=UDim.new(0 + 0 ,6);v255.Parent=v245;local v259=Instance.new(v7("\24\146\222\59\41\191\231\52\42","\90\77\219\142"));v259.PaddingTop=UDim.new(1190 -(50 + 1140) ,8);v259.PaddingBottom=UDim.new(0 + 0 ,8);v259.PaddingLeft=UDim.new(0 + 0 ,8);v259.PaddingRight=UDim.new(0 + 0 ,8);v259.Parent=v245;local v265=Instance.new(v7("\210\1\57\45\96\6\120\227\8","\26\134\100\65\89\44\103"));v265.Size=UDim2.new(1 -0 , -6,0,22);v265.Position=UDim2.new(0,4,1 + 0 , -(662 -(157 + 439)));v265.BackgroundTransparency=1 -0 ;v265.Text="💡 提示：請開啟法寶背包後點擊上方按鈕進行檢測";v265.TextColor3=Color3.fromRGB(150,50,332 -232 );v265.Font=Enum.Font.Code;v265.TextSize=math.max(32 -21 ,v31.MenuTextSize-(919 -(782 + 136)) );v265.TextXAlignment=Enum.TextXAlignment.Left;v265.TextTruncate=Enum.TextTruncate.AtEnd;v265.ZIndex=870 -(112 + 743) ;v265.Parent=v196;local v279=Instance.new(v7("\215\241\49\46\161","\196\145\131\80\67"));v279.Size=UDim2.new(1, -(1177 -(1026 + 145)),0 + 0 ,760 -(493 + 225) );v279.Position=UDim2.new(0,0,1, -42);v279.BackgroundTransparency=3 -2 ;v279.ZIndex=15;v279.Parent=v196;local v285=Instance.new(v7("\42\181\30\28\58\253\10\164\9\6","\136\126\208\102\104\120"));v285.Size=UDim2.new(0.48 + 0 ,0 -0 ,1,0);v285.BackgroundColor3=Color3.fromRGB(5 + 250 ,657 -427 ,71 + 171 );v285.Text=v42(v7("\75\143\194\70\172\70\28\93\116","\49\24\234\174\35\207\50\93"));v285.TextColor3=Color3.fromRGB(200 -80 ,80,1700 -(210 + 1385) );v285.Font=Enum.Font.GothamBold;v285.TextSize=v31.MenuTextSize;v285.TextTruncate=Enum.TextTruncate.AtEnd;v285.ZIndex=16;v285.Parent=v279;v54(v285,1705 -(1201 + 488) );v55(v285);table.insert(v203,{[v7("\35\240\247","\17\108\146\157\232")]=v285,[v7("\96\198\13","\200\43\163\116\141\79")]=v7("\140\51\49\134\179\224\194\179\58","\131\223\86\93\227\208\148"),[v7("\206\68\174\133\20\175\230","\213\131\37\214\214\125")]=12 + 6 });local v295=Instance.new(v7("\18\46\61\171\195\51\63\49\176\239","\129\70\75\69\223"));v295.Size=UDim2.new(0.49,0,1 -0 ,0);v295.Position=UDim2.new(0.51 -0 ,0,585 -(352 + 233) ,0 -0 );v295.BackgroundColor3=Color3.fromRGB(255,58 + 47 ,511 -331 );v295.Text=v42(v7("\99\211\227\230\110\251\117\206\255\236\127\251\67\207","\143\38\171\147\137\28"));v295.TextColor3=Color3.new(1,575 -(489 + 85) ,1502 -(277 + 1224) );v295.Font=Enum.Font.GothamBold;v295.TextSize=v31.MenuTextSize;v295.TextTruncate=Enum.TextTruncate.AtEnd;v295.ZIndex=16;v295.Parent=v279;v54(v295,1509 -(663 + 830) );v55(v295);table.insert(v203,{[v7("\255\128\179","\180\176\226\217\147\99\131")]=v295,[v7("\248\188\54","\103\179\217\79")]=v7("\111\175\12\218\83\152\144\79\187\25\214\85\137\167","\195\42\215\124\181\33\236"),[v7("\32\88\47\13\44\226\8","\152\109\57\87\94\69")]=16 + 2 });local v306={["七彩"]={[v7("\218\216\6\172\172","\200\153\183\106\195\222\178\52")]=Color3.fromRGB(200,122 -72 ,1075 -(461 + 414) ),[v7("\27\224\135\51","\58\82\131\232\93\41")]="✨"},["金光"]={[v7("\160\88\220\26\79","\95\227\55\176\117\61")]=Color3.fromRGB(210,27 + 133 ,0),[v7("\49\125\44\69","\203\120\30\67\43")]="👑"},["神品"]={[v7("\210\42\65\224\203","\185\145\69\45\143")]=Color3.fromRGB(89 + 131 ,8 + 72 ,20),[v7("\163\28\22\168","\188\234\127\121\198")]="🔥"},["仙品"]={[v7("\27\61\31\140\42","\227\88\82\115")]=Color3.fromRGB(0 + 0 ,160,450 -(172 + 78) ),[v7("\106\28\181\169","\19\35\127\218\199\98")]="💎"},["靈品"]={[v7("\63\244\6\237\14","\130\124\155\106")]=Color3.fromRGB(64 -24 ,59 + 101 ,90),[v7("\252\200\249\161","\223\181\171\150\207\195\150\28")]="🍃"},["凡品"]={[v7("\111\53\239\161\27","\105\44\90\131\206")]=Color3.fromRGB(120,120,187 -57 ),[v7("\214\227\189\183","\94\159\128\210\217\104")]="📦"}};local function v307(v652) local v653=0;local v654;while true do if (v653==(0 + 0)) then v654=0 + 0 ;while true do if (v654==(0 -0)) then for v962,v963 in pairs(v306) do if v652:find(v962) then return v963;end end return {[v7("\115\246\10\176\77","\26\48\153\102\223\63\31\153")]=Color3.fromRGB(100,125 -25 ,31 + 89 ),[v7("\43\67\226\253","\147\98\32\141")]="🔹"};end end break;end end end local v308={};local v309={};local v310={};local function v311() local v655=0 + 0 ;local v656={};pcall(function() for v739,v740 in ipairs(v24:GetDescendants()) do if (v740 and (v740:IsA(v7("\62\81\226\199\3","\43\120\35\131\170\102\54")) or v740:IsA(v7("\103\5\149\185\169\188\141\90\1\161\164\164\189\129","\228\52\102\231\214\197\208")))) then local v895=v740.Name:lower();if ((v895:find(v7("\28\225\114","\182\126\128\21\170\138\235\121")) or v895:find(v7("\130\212\35\227\136\7\63\20\146","\102\235\186\85\134\230\115\80")) or v895:find(v7("\80\30\55\91","\66\55\108\94\63\18\180"))) and v740.Visible) then for v964,v965 in ipairs(v740:GetDescendants()) do if (v965 and v965:IsA(v7("\50\159\132\58\34","\57\116\237\229\87\71")) and v965.Visible and (v965.AbsoluteSize.X>(15 + 25))) then local v984={};for v1002,v1003 in ipairs(v965:GetDescendants()) do if (v1003 and v1003:IsA(v7("\158\180\245\243\91\239\69\175\189","\39\202\209\141\135\23\142")) and v1003.Visible and (v1003.Text~="")) then table.insert(v984,v1003.Text);end end if ( #v984>0) then local v1009=table.concat(v984,v7("\191\47\73","\152\159\83\105\106\82"));if ( not v1009:find("法寶背包") and  not v1009:find("功法") and  not v1009:find("仙緣商城") and  not v1009:find("展示台") and  not v656[v1009]) then v656[v1009]=true;v655=v655 + (3 -2) ;if  not v309[v1009] then v309[v1009]=v965;local v1033=v307(v1009);local v1034=Instance.new(v7("\181\195\73\230\235\73\149\210\94\252","\60\225\166\49\146\169"));v1034.Size=UDim2.new(1, -6,0,93 -53 );v1034.BackgroundColor3=Color3.fromRGB(255,238,76 + 169 );v1034.Text=string.format(v7("\111\94\111\17\65\71\18\94\111\111\18\71\111\91\60","\103\79\126\79\74\97"),v1033.Icon,v1009);v1034.TextColor3=v1033.Color;v1034.Font=Enum.Font.Code;v1034.TextSize=math.max(11,v31.MenuTextSize-(1 + 0) );v1034.TextXAlignment=Enum.TextXAlignment.Left;v1034.TextTruncate=Enum.TextTruncate.AtEnd;v1034.ZIndex=16;v1034.Parent=v245;v54(v1034,459 -(133 + 314) );v310[v1009]=v1034;v1034.MouseButton1Click:Connect(function() if v308[v1009] then local v1055=0 + 0 ;while true do if (v1055==(214 -(199 + 14))) then v1034.Text=string.format(v7("\250\63\147\72\30\90\135\63\147\54\77\90\250\58\192","\122\218\31\179\19\62"),v1033.Icon,v1009);break;end if ((0 -0)==v1055) then v308[v1009]=nil;v1034.BackgroundColor3=Color3.fromRGB(1804 -(647 + 902) ,238,736 -491 );v1055=1;end end else local v1056=233 -(85 + 148) ;while true do if ((1290 -(426 + 863))==v1056) then v1034.Text=string.format("   [☑]  %s  %s",v1033.Icon,v1009);break;end if (v1056==(0 -0)) then v308[v1009]=true;v1034.BackgroundColor3=Color3.fromRGB(255,1864 -(873 + 781) ,307 -77 );v1056=1;end end end end);end end end end end end end end end);for v705,v706 in pairs(v309) do if ( not v656[v705] or  not v706 or  not v706.Parent) then local v817=0;while true do if (v817==(0 -0)) then v309[v705]=nil;v308[v705]=nil;v817=1;end if (v817==(1 + 0)) then if v310[v705] then v310[v705]:Destroy();v310[v705]=nil;end break;end end end end v245.CanvasSize=UDim2.new(0 -0 ,0 -0 ,0 -0 ,(v655 * (1993 -(414 + 1533))) + 16 );v32.DetectedCount=v655;if (v655>(0 + 0)) then v265.Text=string.format("✨ 檢測完成：成功識別 %d 件法寶！",v655);else v265.Text="⚠️ 提示：未在畫面上偵測到法寶項目";end end v235.MouseButton1Click:Connect(function() v311();end);local v312=false;v285.MouseButton1Click:Connect(function() local v659=555 -(443 + 112) ;while true do if (v659==0) then v312= not v312;for v896,v897 in pairs(v310) do local v898=0;local v899;while true do if (v898==(1479 -(888 + 591))) then v899=v307(v896);if v312 then local v985=0;while true do if (v985==0) then v308[v896]=true;v897.BackgroundColor3=Color3.fromRGB(255,542 -332 ,14 + 216 );v985=3 -2 ;end if (v985==1) then v897.Text=string.format("   [☑]  %s  %s",v899.Icon,v896);break;end end else v308[v896]=nil;v897.BackgroundColor3=Color3.fromRGB(255,93 + 145 ,119 + 126 );v897.Text=string.format(v7("\243\150\141\250\137\225\120\243\150\136\210\137\225\0\160","\37\211\182\173\161\169\193"),v899.Icon,v896);end break;end end end break;end end end);v295.MouseButton1Click:Connect(function() local v660=0 + 0 ;local v661="";for v707,v708 in pairs(v308) do local v709=0 -0 ;while true do if (v709==(0 -0)) then v660=v660 + (1679 -(136 + 1542)) ;v661=v661   .. v7("\186\122","\217\151\90\45\185\72\27")   .. v707   .. "\n" ;break;end end end if (setclipboard and (v660>(0 -0))) then pcall(function() setclipboard(v661);end);v265.Text=string.format("📋 已成功複製 %d 件法寶資訊至剪貼簿！",v660);else v265.Text="⚠️ 提示：未選取項目或剪貼簿無權限";end end);local v313=Instance.new(v7("\229\110\230\31\83","\54\163\28\135\114"));v313.Size=UDim2.new(1 + 0 , -6,0 -0 ,105 + 40 );v313.BackgroundColor3=Color3.fromRGB(741 -(68 + 418) ,664 -419 ,453 -203 );v313.BackgroundTransparency=0.3 + 0 ;v313.ClipsDescendants=true;v313.ZIndex=1107 -(770 + 322) ;v313.Parent=v197;v54(v313,16);local v320=Instance.new(v7("\29\242\110\150\92\112\35\222","\31\72\187\61\226\46"));v320.Color=Color3.fromRGB(15 + 240 ,61 + 149 ,230);v320.Transparency=0.6;v320.Thickness=1;v320.Parent=v313;local v325=Instance.new(v7("\247\3\91\198\107\127\38\198\10","\68\163\102\35\178\39\30"));v325.Size=UDim2.new(1, -24,0,26);v325.Position=UDim2.new(0,12,0 + 0 ,10);v325.BackgroundTransparency=1 -0 ;v325.Text="⏱️ 掛機運行計時與數據看板";v325.TextColor3=Color3.fromRGB(349 -169 ,50,299 -189 );v325.Font=Enum.Font.GothamBold;v325.TextSize=v31.MenuTextSize;v325.TextXAlignment=Enum.TextXAlignment.Left;v325.TextTruncate=Enum.TextTruncate.AtEnd;v325.ZIndex=58 -42 ;v325.Parent=v313;table.insert(v203,{[v7("\145\114\208","\113\222\16\186\167\99\213\227")]=v325,[v7("\3\15\227\197\39\20\254","\150\78\110\155")]=18});local v337=Instance.new(v7("\177\192\63\245\136\31\189\69\137","\32\229\165\71\129\196\126\223"));v337.Size=UDim2.new(1 + 0 , -24,1 -0 , -(21 + 21));v337.Position=UDim2.new(0,12,0 + 0 ,30 + 8 );v337.BackgroundTransparency=3 -2 ;v337.Text="🌸 計時與日誌載入中...";v337.TextColor3=Color3.fromRGB(90,97 -27 ,29 + 56 );v337.Font=Enum.Font.Code;v337.TextSize=v31.MenuTextSize;v337.TextXAlignment=Enum.TextXAlignment.Left;v337.TextYAlignment=Enum.TextYAlignment.Top;v337.TextWrapped=true;v337.ZIndex=73 -57 ;v337.Parent=v313;table.insert(v203,{[v7("\236\139\206","\181\163\233\164\225\225")]=v337,[v7("\125\138\38\68\89\145\59","\23\48\235\94")]=56 -39 });local v351=Instance.new(v7("\72\223\192\73\117\38\198\104\213\214","\178\28\186\184\61\55\83"));v351.Size=UDim2.new(1 + 0 , -(29 -23),0,873 -(762 + 69) );v351.BackgroundColor3=Color3.fromRGB(825 -570 ,199 + 31 ,157 + 85 );v351.Text=v42(v7("\246\200\84\57\230\61\225\197\217\84","\149\164\173\39\92\146\110"));v351.TextColor3=Color3.fromRGB(290 -170 ,26 + 54 ,2 + 103 );v351.Font=Enum.Font.GothamBold;v351.TextSize=v31.MenuTextSize;v351.TextTruncate=Enum.TextTruncate.AtEnd;v351.ZIndex=58 -43 ;v351.Parent=v197;v54(v351,173 -(8 + 149) );v55(v351);table.insert(v203,{[v7("\220\37\26","\123\147\71\112\127\122")]=v351,[v7("\231\200\155","\38\172\173\226\17")]=v7("\127\20\63\234\89\34\56\238\89\2","\143\45\113\76"),[v7("\149\185\4\15\177\162\25","\92\216\216\124")]=1338 -(1199 + 121) });v351.MouseButton1Click:Connect(function() local v662=0 -0 ;while true do if (v662==(2 -1)) then v32.GachaCount=0;v32.DetectedCount=0;break;end if (v662==(0 + 0)) then v32.StartTime=tick();v32.LaunchCount=0;v662=3 -2 ;end end end);local v361=Instance.new(v7("\125\32\173\77\248","\157\59\82\204\32"));v361.Size=UDim2.new(2 -1 , -6,0,120 + 15 );v361.BackgroundColor3=Color3.fromRGB(255,245,2057 -(518 + 1289) );v361.BackgroundTransparency=0.3 -0 ;v361.ClipsDescendants=true;v361.ZIndex=2 + 13 ;v361.Parent=v197;v54(v361,16);local v368=Instance.new(v7("\13\23\208\238\251\229\216\180","\209\88\94\131\154\137\138\179"));v368.Color=Color3.fromRGB(255,306 -96 ,230);v368.Transparency=0.6 + 0 ;v368.Thickness=470 -(304 + 165) ;v368.Parent=v361;local v373=Instance.new(v7("\28\164\220\104\50\34\51\39\36","\66\72\193\164\28\126\67\81"));v373.Size=UDim2.new(1 + 0 , -(184 -(54 + 106)),0,1995 -(1618 + 351) );v373.Position=UDim2.new(0 + 0 ,12,1016 -(10 + 1006) ,3 + 7 );v373.BackgroundTransparency=1 + 0 ;v373.Text="🖥️ 系統即時監控狀態";v373.TextColor3=Color3.fromRGB(180,162 -112 ,1143 -(912 + 121) );v373.Font=Enum.Font.GothamBold;v373.TextSize=v31.MenuTextSize;v373.TextXAlignment=Enum.TextXAlignment.Left;v373.TextTruncate=Enum.TextTruncate.AtEnd;v373.ZIndex=8 + 8 ;v373.Parent=v361;table.insert(v203,{[v7("\200\46\162","\22\135\76\200\56\70")]=v373,[v7("\160\49\224\23\84\251\136","\129\237\80\152\68\61")]=18});local v385=Instance.new(v7("\101\173\28\231\48\22\90\84\164","\56\49\200\100\147\124\119"));v385.Size=UDim2.new(1290 -(1140 + 149) , -(16 + 8),1 -0 , -(8 + 34));v385.Position=UDim2.new(0,40 -28 ,0 -0 ,7 + 31 );v385.BackgroundTransparency=3 -2 ;v385.Text="🔮 初始化中...";v385.TextColor3=Color3.fromRGB(90,70,271 -(165 + 21) );v385.Font=Enum.Font.Code;v385.TextSize=v31.MenuTextSize;v385.TextXAlignment=Enum.TextXAlignment.Left;v385.TextYAlignment=Enum.TextYAlignment.Top;v385.TextWrapped=true;v385.ZIndex=127 -(61 + 50) ;v385.Parent=v361;table.insert(v203,{[v7("\227\60\181","\144\172\94\223")]=v385,[v7("\9\14\186\116\45\21\167","\39\68\111\194")]=17});local v398=Instance.new(v7("\240\180\230\202\124","\215\182\198\135\167\25"));v398.Size=UDim2.new(1 + 0 , -6,0,3431 -2711 );v398.BackgroundColor3=Color3.fromRGB(513 -258 ,97 + 148 ,1710 -(1295 + 165) );v398.BackgroundTransparency=0.3 + 0 ;v398.ClipsDescendants=true;v398.ZIndex=7 + 8 ;v398.Parent=v198;v54(v398,1413 -(819 + 578) );local v405=Instance.new(v7("\184\96\217\92\159\70\225\77","\40\237\41\138"));v405.Color=Color3.fromRGB(1657 -(331 + 1071) ,953 -(588 + 155) ,230);v405.Transparency=1282.6 -(546 + 736) ;v405.Thickness=1938 -(1834 + 103) ;v405.Parent=v398;local v410=Instance.new(v7("\243\113\226\236\102\198\118\255\244","\42\167\20\154\152"));v410.Size=UDim2.new(1 + 0 , -(71 -47),0,1794 -(1536 + 230) );v410.Position=UDim2.new(0,503 -(128 + 363) ,0 + 0 ,10);v410.BackgroundTransparency=2 -1 ;v410.Text=v42(v7("\105\246\163\76\118\36\70\241\165\118\120\53\70\251","\65\42\158\194\34\17"));v410.TextColor3=Color3.fromRGB(47 + 133 ,82 -32 ,323 -213 );v410.Font=Enum.Font.GothamBold;v410.TextSize=v31.MenuTextSize;v410.TextXAlignment=Enum.TextXAlignment.Left;v410.TextTruncate=Enum.TextTruncate.AtEnd;v410.ZIndex=16;v410.Parent=v398;table.insert(v203,{[v7("\53\37\88","\142\122\71\50\108\77\141\123")]=v410,[v7("\62\167\230","\91\117\194\159\120")]=v7("\57\21\63\22\50\244\40\21\26\10\17\33\253\33","\68\122\125\94\120\85\145"),[v7("\58\29\215\109\193\195\191","\218\119\124\175\62\168\185")]=18});local v422=Instance.new(v7("\145\245\80\208\137\241\74\193\169","\164\197\144\40"));v422.Size=UDim2.new(2 -1 , -(17 + 7),1, -(1053 -(615 + 394)));v422.Position=UDim2.new(0 + 0 ,12 + 0 ,0,40);v422.BackgroundTransparency=2 -1 ;v422.Text="";v422.TextColor3=Color3.fromRGB(408 -318 ,70,736 -(59 + 592) );v422.Font=Enum.Font.Code;v422.TextSize=math.max(26 -14 ,v31.MenuTextSize-(1 -0) );v422.TextXAlignment=Enum.TextXAlignment.Left;v422.TextYAlignment=Enum.TextYAlignment.Top;v422.TextWrapped=true;v422.ZIndex=12 + 4 ;v422.Parent=v398;table.insert(v203,{[v7("\172\242\160","\214\227\144\202\235\189")]=v422,[v7("\192\164\159\72\25\169\86","\92\141\197\231\27\112\211\51")]=188 -(70 + 101) });function v45() local v663=v11[v25] or v11.zh ;v422.Text=table.concat(v663,"\n");end v45();local v435=Instance.new(v7("\210\250\146\183\253\231\253\143\175","\177\134\159\234\195"));v435.Size=UDim2.new(2 -1 , -(5 + 1),0,60 -36 );v435.BackgroundTransparency=242 -(123 + 118) ;v435.Text=v42(v7("\158\228\49\166\192\186\216\62\182\204\185\198\44\167","\169\221\139\95\192"));v435.TextColor3=Color3.fromRGB(44 + 136 ,1 + 49 ,110);v435.Font=Enum.Font.Code;v435.TextSize=math.max(1410 -(653 + 746) ,v31.MenuTextSize-(1 -0) );v435.TextXAlignment=Enum.TextXAlignment.Left;v435.TextTruncate=Enum.TextTruncate.AtEnd;v435.ZIndex=21 -6 ;v435.Parent=v199;local v446;do local v665=0 -0 ;local v666;local v667;local v668;while true do if (v665==(2 + 2)) then v668.Parent=v666;table.insert(v203,{[v7("\1\254\128","\161\78\156\234\118")]=v668,[v7("\140\178\208","\188\199\215\169")]=v7("\221\10\92\126\230\232\61\87\126\229\249","\136\156\105\63\27"),[v7("\54\141\97\7\18\150\124","\84\123\236\25")]=18});v446=Instance.new(v7("\196\142\178\3\142\160\228\159\165\25","\213\144\235\202\119\204"));v446.Size=UDim2.new(0.5 + 0 , -(16 + 2),0 + 0 ,6 + 28 );v446.Position=UDim2.new(0.5,14 -8 ,0.5 + 0 , -(31 -14));v446.BackgroundColor3=Color3.fromRGB(1489 -(885 + 349) ,230,242);v665=4 + 1 ;end if (v665==0) then v666=Instance.new(v7("\248\153\126\50\39","\70\190\235\31\95\66"));v666.Size=UDim2.new(2 -1 , -(17 -11),968 -(915 + 53) ,857 -(768 + 33) );v666.BackgroundColor3=Color3.fromRGB(976 -721 ,431 -186 ,250);v666.BackgroundTransparency=328.3 -(287 + 41) ;v666.ClipsDescendants=true;v666.ZIndex=15;v665=848 -(638 + 209) ;end if (v665==5) then v446.Text=v28[v26];v446.TextColor3=Color3.fromRGB(94 + 86 ,50,1796 -(96 + 1590) );v446.Font=Enum.Font.GothamBold;v446.TextSize=v31.MenuTextSize;v446.TextTruncate=Enum.TextTruncate.AtEnd;v446.ZIndex=1688 -(741 + 931) ;v665=6;end if (v665==(3 + 3)) then v446.Parent=v666;v54(v446,34 -22 );v55(v446);table.insert(v203,{[v7("\12\26\212","\45\67\120\190\74\72\67")]=v446,[v7("\13\35\245\150\240\146\235","\137\64\66\141\197\153\232\142")]=79 -62 });v446.MouseButton1Click:Connect(function() v26=(v26% #v28) + 1 ;v446.Text=v28[v26];v44();v39();v435.Text=v42(v7("\32\223\44\160\129\4\227\35\176\141\7\253\49\161","\232\99\176\66\198"));end);break;end if ((2 + 1)==v665) then v668.TextColor3=Color3.fromRGB(90,31 + 39 ,85);v668.Font=Enum.Font.GothamMedium;v668.TextSize=v31.MenuTextSize;v668.TextXAlignment=Enum.TextXAlignment.Left;v668.TextTruncate=Enum.TextTruncate.AtEnd;v668.ZIndex=16;v665=2 + 2 ;end if (v665==2) then v667.Parent=v666;v668=Instance.new(v7("\8\250\251\208\240\162\58\57\243","\88\92\159\131\164\188\195"));v668.Size=UDim2.new(0.45 -0 , -(6 + 12),1 + 0 ,0 -0 );v668.Position=UDim2.new(0,17 + 1 ,0,494 -(64 + 430) );v668.BackgroundTransparency=1 + 0 ;v668.Text=v42(v7("\161\45\188\78\217\255\233\136\43\178\78","\189\224\78\223\43\183\139"));v665=366 -(106 + 257) ;end if (v665==(1 + 0)) then v666.Parent=v199;v54(v666,737 -(496 + 225) );v667=Instance.new(v7("\143\203\41\242\247\181\233\31","\133\218\130\122\134"));v667.Color=Color3.fromRGB(521 -266 ,1022 -812 ,1888 -(256 + 1402) );v667.Transparency=1899.6 -(30 + 1869) ;v667.Thickness=1370 -(213 + 1156) ;v665=190 -(96 + 92) ;end end end v205(v199,v7("\202\46\38\18\72\132\227\41","\76\140\65\72\102\27\237\153"),v31.MenuTextSize,2 + 8 ,921 -(142 + 757) ,function(v669) local v670=0 + 0 ;while true do if (1==v670) then if v47 then v47();end break;end if ((0 + 0)==v670) then v31.MenuTextSize=v669;for v903,v904 in ipairs(v203) do local v905=0;local v906;while true do if (v905==0) then v906=(v904.MaxSize and math.min(v669,v904.MaxSize)) or v669 ;if v904.Obj then pcall(function() v904.Obj.TextSize=v906;end);end v905=80 -(32 + 47) ;end if (v905==(1978 -(1053 + 924))) then if v904.ValBox then pcall(function() v904.ValBox.TextSize=v906;end);end break;end end end v670=1 + 0 ;end end end);v205(v199,v7("\103\223\24\199\246\13\174\66\219","\222\42\186\118\178\183\97"),v31.MenuBackgroundAlpha,0 -0 ,1728 -(685 + 963) ,function(v671) v31.MenuBackgroundAlpha=v671;v64.BackgroundTransparency=v671/(203 -103) ;end);function v44() local v674=0;local v675;while true do if ((1 -0)==v674) then v373.TextColor3=v675;v325.TextColor3=v675;v410.TextColor3=v675;v446.TextColor3=v675;v674=2;end if (v674==(1711 -(541 + 1168))) then v245.ScrollBarImageColor3=v675;v112.TextColor3=v675;for v907,v908 in ipairs(v203) do if v908.ValBox then v908.ValBox.TextColor3=v675;end if v908.SliderFill then v908.SliderFill.BackgroundColor3=v675;end end break;end if (v674==(1597 -(645 + 952))) then v675=v30();v102.Color=v675;v107.Color=v675;v86.Color=v675;v674=839 -(669 + 169) ;end end end function v43() local v676=0 -0 ;while true do if (v676==(0 -0)) then for v909,v910 in ipairs(v201) do v910.Btn.Text=v7("\29\172\4","\234\61\140\36")   .. v42(v910.Key) ;end for v912,v913 in ipairs(v203) do local v914=0;local v915;while true do if (v914==0) then v915=0 + 0 ;while true do if (v915==0) then if (v913.Key and v913.Obj) then v913.Obj.Text=v42(v913.Key);end if v913.CustomRefresh then v913.CustomRefresh();end v915=1 + 0 ;end if (v915==(766 -(181 + 584))) then if (v913.ToggleBtn and v913.GetState) then v913.ToggleBtn.Text=(v913.GetState() and v42(v7("\14\211","\111\65\189\218\18"))) or v42(v7("\108\77\29","\207\35\43\123\85\107\60")) ;end break;end end break;end end end v676=1396 -(665 + 730) ;end if ((2 -1)==v676) then v45();v435.Text=v42(v7("\83\165\174\236\112\119\153\161\252\124\116\135\179\237","\25\16\202\192\138"));v676=3 -1 ;end if (v676==(1352 -(540 + 810))) then if v47 then v47();end break;end end end v44();local function v447() local v677=tick();local v678=v31.ClickDelay + (math.random(3 -2 ,41 -26 )/(80 + 20)) ;if ((v677-v33)<v678) then return;end v33=v677;local v679=workspace.CurrentCamera;local v680,v681=v679.ViewportSize.X/2 ,v679.ViewportSize.Y/2 ;pcall(function() if (v18 and v18.SendMouseButtonEvent) then local v872=0;while true do if (v872==(203 -(166 + 37))) then v18:SendMouseButtonEvent(v680,v681,1881 -(22 + 1859) ,true,game,1773 -(843 + 929) );task.wait(math.random(15,292 -(30 + 232) )/(2856 -1856) );v872=778 -(55 + 722) ;end if (v872==(1 -0)) then v18:SendMouseButtonEvent(v680,v681,1675 -(78 + 1597) ,false,game,1);break;end end elseif mouse1click then mouse1click();end end);v32.LaunchCount=v32.LaunchCount + 1 + 0 ;v206=string.format("⚡ 狀態：已發射 [%d%%] (總計: %d次)",v31.TargetPercent,v32.LaunchCount);end local function v448(v683) local v684=0;local v685;local v686;local v687;while true do if (v684==1) then v687=math.floor(v683%60 );return string.format(v7("\184\155\255\230\243\177\173\153\169\184\236\164\175\207","\148\157\171\205\130\201"),v685,v686,v687);end if (v684==(0 + 0)) then v685=math.floor(v683/3600 );v686=math.floor((v683%3600)/60 );v684=1 + 0 ;end end end local v449=549 -(305 + 244) ;local v450=0 + 0 ;v16.RenderStepped:Connect(function() local v688=0;local v689;local v690;local v691;while true do if ((107 -(95 + 10))==v688) then pcall(function() if v31.AutoWalk then local v945=0 + 0 ;local v946;local v947;while true do if (0==v945) then local v989=0;while true do if (v989==(0 -0)) then v946=v23.Character;v947=v946 and v946:FindFirstChildOfClass(v7("\165\13\23\76\131\23\19\73","\45\237\120\122")) ;v989=1;end if (v989==(1 -0)) then v945=763 -(592 + 170) ;break;end end end if ((3 -2)==v945) then if v947 then local v1010=workspace.CurrentCamera;local v1011=v1010.CFrame.LookVector;local v1012=Vector3.new(v1011.X,0,v1011.Z).Unit;v947:Move(v1012,true);end break;end end end end);if  not v31.AutoLaunch then return;end if ((v689-v450)<0.05) then return;end v450=v689;v688=7 -4 ;end if (v688==3) then pcall(function() local v916=0 + 0 ;local v917;while true do if (1==v916) then for v976,v977 in ipairs(v917:GetDescendants()) do if (v977:IsA(v7("\92\244\228\53\85","\116\26\134\133\88\48\47")) and v977.Visible and (v977.AbsoluteSize.X>(63 + 97))) then local v1006=v977;for v1013,v1014 in ipairs(v1006:GetChildren()) do if (v1014:IsA(v7("\56\211\161\233\184","\18\126\161\192\132\221")) and v1014.Visible and (v1014.AbsoluteSize.X<(120 -70)) and (v1014.AbsoluteSize.X>(1 + 4))) then local v1025=0 -0 ;local v1026;local v1027;local v1028;local v1029;while true do if (v1025==(509 -(353 + 154))) then v206=string.format("📊 進度掃描: %.1f%% / 目標: %d%%",v1029,v31.TargetPercent);if (v1029>=v31.TargetPercent) then v447();return;end break;end if (v1025==(1 -0)) then v1028=v1014.AbsolutePosition.X;v1029=math.clamp(((v1028-v1026)/v1027) * (136 -36) ,0 + 0 ,79 + 21 );v1025=2;end if (v1025==(0 + 0)) then v1026=v1006.AbsolutePosition.X;v1027=v1006.AbsoluteSize.X;v1025=1 -0 ;end end end end end end break;end if (v916==(0 -0)) then local v966=0 -0 ;while true do if (v966==(87 -(7 + 79))) then v916=1;break;end if (v966==0) then v917=v24:FindFirstChild(v7("\250\233\171\34\226\193","\76\183\136\194"));if  not v917 then return;end v966=1;end end end end end);break;end if (v688==(0 + 0)) then if v35 then return;end v689=tick();if (v31.AutoGacha and ((v689-v449)>=(181.2 -(24 + 157)))) then local v931=0 -0 ;while true do if (v931==(0 -0)) then v449=v689;v225();break;end end end v690=v689-v32.StartTime ;v688=1 + 0 ;end if (v688==1) then v691=0 -0 ;pcall(function() v691=math.floor(v21.Network.ServerStatsItem[v7("\7\213\96\40\145\198\42\218\115","\150\67\180\20\73\177")]:GetValue());end);v337.Text=string.format("• ⏳ 累計掛機時長: %s\n• 🚀 自動發射總次數: %d 次 | 🥚 抽蛋累計: %d\n• 💎 檢測法寶總數: %d 件",v448(v690),v32.LaunchCount,v32.GachaCount,v32.DetectedCount);v385.Text=string.format("• 💻 執行環境: %s\n• 📶 網路延遲: %d ms\n• %s",v14(),v691,v206);v688=2;end end end);
+local sha256
+do
+    local K = {
+        0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
+        0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
+        0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
+        0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
+        0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,
+        0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
+        0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
+        0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2
+    }
+    local function rrot(x, n) return bit32.rrotate(x, n) end
+    function sha256(msg)
+        local len = #msg
+        msg = msg .. "\128" .. string.rep("\0", (55 - len) % 64) .. string.pack(">I8", len * 8)
+        local h0,h1,h2,h3,h4,h5,h6,h7 =
+            0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19
+        for i = 1, #msg, 64 do
+            local w = {}
+            for j = 0, 15 do
+                w[j] = string.unpack(">I4", msg, i + j * 4)
+            end
+            for j = 16, 63 do
+                local s0 = bit32.bxor(rrot(w[j-15], 7), rrot(w[j-15], 18), bit32.rshift(w[j-15], 3))
+                local s1 = bit32.bxor(rrot(w[j-2], 17), rrot(w[j-2], 19), bit32.rshift(w[j-2], 10))
+                w[j] = (w[j-16] + s0 + w[j-7] + s1) % 4294967296
+            end
+            local a,b,c,d,e,f,g,h = h0,h1,h2,h3,h4,h5,h6,h7
+            for j = 0, 63 do
+                local S1 = bit32.bxor(rrot(e, 6), rrot(e, 11), rrot(e, 25))
+                local ch = bit32.bxor(bit32.band(e, f), bit32.band(bit32.bnot(e), g))
+                local t1 = (h + S1 + ch + K[j+1] + w[j]) % 4294967296
+                local S0 = bit32.bxor(rrot(a, 2), rrot(a, 13), rrot(a, 22))
+                local maj = bit32.bxor(bit32.band(a, b), bit32.band(a, c), bit32.band(b, c))
+                local t2 = (S0 + maj) % 4294967296
+                h,g,f,e,d,c,b,a = g,f,e,(d+t1)%4294967296,c,b,a,(t1+t2)%4294967296
+            end
+            h0=(h0+a)%4294967296; h1=(h1+b)%4294967296; h2=(h2+c)%4294967296; h3=(h3+d)%4294967296
+            h4=(h4+e)%4294967296; h5=(h5+f)%4294967296; h6=(h6+g)%4294967296; h7=(h7+h)%4294967296
+        end
+        return string.format("%08x%08x%08x%08x%08x%08x%08x%08x", h0,h1,h2,h3,h4,h5,h6,h7)
+    end
+end
+
+local _tamperShadow = createShadowNumber(0)
+local _sessionShadow = createShadowNumber(0)
+local _authFlagShadow = createShadowNumber(1337)
+local _lastIntegrityCheck = 0
+
+local function _checkIntegrity()
+    local reqFn = (syn and syn.request) or (http and http.request) or http_request or (fluxus and fluxus.request) or request
+    if type(reqFn) ~= "function" then
+        _tamperShadow.set(1)
+        return false
+    end
+    if iscclosure and not iscclosure(reqFn) then
+        _tamperShadow.set(1)
+        return false
+    end
+    if iscclosure and loadstring and not iscclosure(loadstring) then
+        _tamperShadow.set(1)
+        return false
+    end
+    return true
+end
+
+local function _isRuntimeHealthy()
+    if _tamperShadow.get() ~= 0 then return false end
+    if _authFlagShadow.get() ~= 7919 then return false end
+    local sf = _sessionShadow.get()
+    if not sf or sf < 1000 then return false end
+    local now = os.clock()
+    if now - _lastIntegrityCheck > 15 then
+        _lastIntegrityCheck = now
+        if not _checkIntegrity() then return false end
+    end
+    return true
+end
+local function applyCorner(p, r)
+local c = Instance.new("UICorner")
+c.CornerRadius = UDim.new(0, r or 24)
+c.Parent = p
+end
+local function mountScreenGui(sGui)
+local mounted = false
+pcall(function()
+if gethui then
+sGui.Parent = gethui()
+mounted = true
+elseif syn and syn.protect_gui then
+syn.protect_gui(sGui)
+sGui.Parent = game:GetService("CoreGui")
+mounted = true
+end
+end)
+if not mounted or not sGui.Parent or not sGui:IsDescendantOf(game) then
+pcall(function()
+sGui.Parent = pg
+end)
+end
+end
+-- ==============================================================================
+-- 🔐 卡密驗證與一機一碼 (HWID) 綁定模組
+-- ==============================================================================
+local function getDeviceHWID()
+local hwid = nil
+pcall(function()
+if gethwid then
+hwid = gethwid()
+elseif syn and syn.get_hwid then
+hwid = syn.get_hwid()
+elseif get_hwid then
+hwid = get_hwid()
+end
+end)
+if not hwid or tostring(hwid) == "" then
+pcall(function()
+hwid = game:GetService("RbxAnalyticsService"):GetClientId()
+end)
+end
+return tostring(hwid or "UNKNOWN_DEVICE")
+end
+local function sendHttpRequest(reqData)
+local requestFunc = (syn and syn.request) or (http and http.request) or http_request or (fluxus and fluxus.request) or request
+if not requestFunc then
+return nil, "您的執行器不支援 HTTP 網路請求"
+end
+local ok, res = pcall(function()
+return requestFunc(reqData)
+end)
+if not ok or not res then
+return nil, "網路連線失敗，請檢查網路狀態"
+end
+return res, nil
+end
+local function verifyLicenseKey(inputKey)
+inputKey = tostring(inputKey or ""):gsub("%s+", "")
+if inputKey == "" then
+return false, "⚠️ 請輸入有效的卡密！"
+end
+    _checkIntegrity()
+    if _tamperShadow.get() ~= 0 then
+        return false, "❌ 偵測到執行環境異常，已中止驗證"
+    end
+
+    local currentHWID = getDeviceHWID()
+    local ts = tostring(os.time())
+    local nonce = HttpService:GenerateGUID(false)
+    local sig = sha256(inputKey .. "|" .. currentHWID .. "|" .. ts .. "|" .. nonce .. "|" .. APP_PEPPER)
+
+    local payload = HttpService:JSONEncode({
+        key = inputKey,
+        license_key = inputKey,
+        hwid = currentHWID,
+        device_id = currentHWID,
+        userId = lp.UserId,
+        ts = ts,
+        nonce = nonce,
+        sig = sig
+    })
+
+    local res, err = sendHttpRequest({
+        Url = API_VERIFY_URL,
+        Method = "POST",
+        Headers = {
+            ["Content-Type"] = "application/json"
+        },
+        Body = payload
+    })
+
+    if not res then
+        return false, "❌ " .. tostring(err)
+    end
+
+    if res.StatusCode == 401 then
+        return false, "❌ 伺服器 401 拒絕連線（請在後台關閉 Verify JWT）"
+    end
+
+    local ok, data = pcall(function()
+        return HttpService:JSONDecode(res.Body)
+    end)
+
+    if not ok or type(data) ~= "table" then
+        return false, "❌ 伺服器回應格式異常 (" .. tostring(res.StatusCode) .. ")"
+    end
+
+    local rawSuccess = data.success
+    if rawSuccess == nil then rawSuccess = data.valid end
+    if rawSuccess == nil then rawSuccess = data.ok end
+
+    local isAuthOk = (rawSuccess == true)
+        or (tostring(rawSuccess):lower() == "true")
+        or (tostring(data.status or ""):lower() == "success")
+        or (tostring(data.status or ""):lower() == "ok")
+
+    local resultText = tostring(data.message or data.msg or "")
+    if not isAuthOk and (resultText:find("驗證通過") or resultText:find("驗證成功")) then
+        isAuthOk = true
+    end
+
+    if isAuthOk then
+        local factor = tonumber(data.session_factor)
+        if factor and factor >= 1000 and type(data.ack) == "string" and data.ack ~= "" then
+            local expectedAck = sha256(nonce .. "|" .. currentHWID .. "|" .. tostring(factor) .. "|" .. APP_PEPPER)
+            if data.ack ~= expectedAck then
+                _tamperShadow.set(1)
+                return false, "❌ 回應簽章校驗失敗", ""
+            end
+            _sessionShadow.set(factor)
+        else
+            _sessionShadow.set(math.random(1000, 9999))
+        end
+        _authFlagShadow.set(7919)
+
+        local function _getLocalUtcOffsetSec()
+            local nowTs = os.time()
+            local utcTbl = os.date("!*t", nowTs)
+            local localTbl = os.date("*t", nowTs)
+            if utcTbl and localTbl then
+                utcTbl.isdst = false
+                localTbl.isdst = false
+                return os.difftime(os.time(localTbl), os.time(utcTbl))
+            end
+            return 0
+        end
+
+        local function _parseIsoToTimestamp(str)
+            local s = tostring(str)
+            local y, m, d, H, M, S = s:match("(%d%d%d%d)%-(%d%d)%-(%d%d)[T%s](%d%d):(%d%d):(%d%d)")
+            if not (y and m and d and H and M and S) then
+                return nil, nil
+            end
+
+            local baseTs = os.time({
+                year = tonumber(y), month = tonumber(m), day = tonumber(d),
+                hour = tonumber(H), min = tonumber(M), sec = tonumber(S)
+            })
+
+            local tzPart = s:match("(%d%d:%d%d:%d%d)([Zz+-][%d:]+)")
+            if tzPart then
+                local signStr, tzH, tzM = s:match("(%d%d:%d%d:%d%d)([+-])(%d%d):?(%d*)")
+                if signStr and tzH then
+                    local offsetFromUtcSec = ((tonumber(tzH) or 0) * 3600 + (tonumber(tzM) or 0) * 60) * (signStr == "-" and -1 or 1)
+                    local localUtcOffsetSec = _getLocalUtcOffsetSec()
+                    local correctedTs = baseTs - offsetFromUtcSec + localUtcOffsetSec
+                    local dt = os.date("*t", correctedTs)
+                    local formattedLocal = string.format("%04d-%02d-%02d %02d:%02d:%02d", dt.year, dt.month, dt.day, dt.hour, dt.min, dt.sec)
+                    return correctedTs, formattedLocal
+                elseif s:match("(%d%d:%d%d:%d%d)[Zz]") then
+                    local localUtcOffsetSec = _getLocalUtcOffsetSec()
+                    local correctedTs = baseTs + localUtcOffsetSec
+                    local dt = os.date("*t", correctedTs)
+                    local formattedLocal = string.format("%04d-%02d-%02d %02d:%02d:%02d", dt.year, dt.month, dt.day, dt.hour, dt.min, dt.sec)
+                    return correctedTs, formattedLocal
+                end
+            end
+
+            return baseTs, nil
+        end
+
+        local function _formatRemainingFromTs(ts)
+            if not ts then return "" end
+            local diff = ts - os.time()
+            if diff <= 0 then
+                return " (已到期)"
+            end
+            local days = math.floor(diff / 86400)
+            local hours = math.floor((diff % 86400) / 3600)
+            local mins = math.floor((diff % 3600) / 60)
+            if days > 0 then
+                return string.format(" (剩 %d天 %d小時)", days, hours)
+            elseif hours > 0 then
+                return string.format(" (剩 %d小時 %d分)", hours, mins)
+            else
+                return string.format(" (剩 %d分)", math.max(1, mins))
+            end
+        end
+
+        local function extractExpiryInfo(tbl, depth)
+            if type(tbl) ~= "table" then return "" end
+            depth = depth or 0
+            if depth > 4 then return "" end
+
+            local candidates = {
+                tbl.expires_at, tbl.expiresAt, tbl.expire_at, tbl.expireAt,
+                tbl.expiration, tbl.expiry, tbl.valid_until, tbl.validUntil,
+                tbl.end_at, tbl.endAt, tbl.expired_at, tbl.expiredAt,
+                tbl.due_date, tbl.dueDate, tbl.until_date, tbl.untilDate,
+                tbl.remaining_days, tbl.remainingDays, tbl.days_left, tbl.daysLeft,
+                tbl.days, tbl.duration_days, tbl.remaining_hours, tbl.remainingHours
+            }
+            for _, c in ipairs(candidates) do
+                if c ~= nil and tostring(c) ~= "" then
+                    if type(c) == "number" then
+                        local secTs = c
+                        if secTs > 100000000000 then
+                            secTs = math.floor(secTs / 1000)
+                        end
+                        if secTs > 1000000000 then
+                            local dt = os.date("*t", math.floor(secTs))
+                            return string.format("%04d-%02d-%02d %02d:%02d:%02d", dt.year, dt.month, dt.day, dt.hour, dt.min, dt.sec)
+                                .. _formatRemainingFromTs(math.floor(secTs))
+                        else
+                            return tostring(c) .. " 天"
+                        end
+                    end
+                    local s = tostring(c)
+                    local ts, convertedStr = _parseIsoToTimestamp(s)
+                    local cleanS = convertedStr or s:gsub("(%d%d%d%d%-%d%d%-%d%d)[T%s](%d%d:%d%d:%d%d).*", "%1 %2")
+                    if ts then
+                        return cleanS .. _formatRemainingFromTs(ts)
+                    end
+                    return cleanS
+                end
+            end
+
+            for k, v in pairs(tbl) do
+                local lk = tostring(k):lower()
+                if (lk:find("exp") or lk:find("valid") or lk:find("end") or lk:find("day") or lk:find("time"))
+                    and v ~= nil and tostring(v) ~= "" and type(v) ~= "table" then
+                    if type(v) == "number" and v > 1000000000 then
+                        local secTs = (v > 100000000000) and math.floor(v / 1000) or math.floor(v)
+                        local dt = os.date("*t", secTs)
+                        return string.format("%04d-%02d-%02d %02d:%02d:%02d", dt.year, dt.month, dt.day, dt.hour, dt.min, dt.sec)
+                            .. _formatRemainingFromTs(secTs)
+                    end
+                    local s = tostring(v)
+                    local ts, convertedStr = _parseIsoToTimestamp(s)
+                    local cleanS = convertedStr or s:gsub("(%d%d%d%d%-%d%d%-%d%d)[T%s](%d%d:%d%d:%d%d).*", "%1 %2")
+                    if ts then
+                        return cleanS .. _formatRemainingFromTs(ts)
+                    end
+                    return cleanS
+                end
+            end
+
+            for _, v in pairs(tbl) do
+                if type(v) == "table" then
+                    local subRes = extractExpiryInfo(v, depth + 1)
+                    if subRes ~= "" then
+                        return subRes
+                    end
+                end
+            end
+            return ""
+        end
+
+        local expiresInfo = extractExpiryInfo(data)
+        if expiresInfo == "" then
+            local baseUrl = API_VERIFY_URL:match("^(https://[^/]+)")
+            if baseUrl then
+                local candidateTables = { "licenses", "license_keys", "keys", "cards" }
+                local encodedKey = HttpService:UrlEncode(inputKey)
+                local headersWithApiKey = {
+                    ["Accept"] = "application/json"
+                }
+                if type(data.anon_key) == "string" and data.anon_key ~= "" then
+                    headersWithApiKey["apikey"] = data.anon_key
+                    headersWithApiKey["Authorization"] = "Bearer " .. data.anon_key
+                end
+                for _, tblName in ipairs(candidateTables) do
+                    local restUrl = string.format("%s/rest/v1/%s?select=expires_at&license_key=eq.%s&limit=1", baseUrl, tblName, encodedKey)
+                    local qRes = sendHttpRequest({
+                        Url = restUrl,
+                        Method = "GET",
+                        Headers = headersWithApiKey
+                    })
+                    if qRes and qRes.StatusCode and qRes.StatusCode >= 200 and qRes.StatusCode < 300 and qRes.Body then
+                        local qOk, qRows = pcall(function()
+                            return HttpService:JSONDecode(qRes.Body)
+                        end)
+                        if qOk and type(qRows) == "table" and #qRows > 0 and type(qRows[1]) == "table" then
+                            local rowExp = extractExpiryInfo(qRows[1], 0)
+                            if rowExp ~= "" then
+                                expiresInfo = rowExp
+                                break
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        if expiresInfo == "" then
+            expiresInfo = "永久有效"
+        end
+        if writefile then
+            pcall(function() writefile(LICENSE_FILE_NAME, inputKey) end)
+        end
+        return true, (resultText ~= "" and resultText) or "✅ 驗證成功！正在載入 Carl Tool...", expiresInfo
+    else
+        _authFlagShadow.set(1337)
+        _sessionShadow.set(0)
+        return false, (resultText ~= "" and resultText) or "❌ 卡密無效或已綁定其他設備！", ""
+    end
+end
+local isVerified = false
+local activeKeyExpiresText = "未取得到期時間"
+if readfile and isfile and isfile(LICENSE_FILE_NAME) then
+local savedKey = ""
+pcall(function() savedKey = readfile(LICENSE_FILE_NAME) end)
+savedKey = tostring(savedKey or ""):gsub("%s+", "")
+if savedKey ~= "" then
+local ok, _, expText = verifyLicenseKey(savedKey)
+if ok then
+isVerified = true
+if expText and expText ~= "" then
+activeKeyExpiresText = expText
+end
+end
+end
+end
+if not isVerified then
+local authGui = Instance.new("ScreenGui")
+authGui.Name = "Auth_" .. _POLY_ID
+authGui.ResetOnSpawn = false
+authGui.IgnoreGuiInset = true
+authGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+mountScreenGui(authGui)
+    local vpAuth = (workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize) or Vector2.new(800, 600)
+    local authFrame = Instance.new("Frame")
+    authFrame.Size = UDim2.new(0, math.min(420, math.max(280, vpAuth.X - 32)), 0, 245)
+    authFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+    authFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+    authFrame.BackgroundColor3 = Color3.fromRGB(255, 240, 246)
+    authFrame.Active = true
+    authFrame.Parent = authGui
+    applyCorner(authFrame, 24)
+
+    local _authGrad = Instance.new("UIGradient")
+    _authGrad.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 225, 238)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(235, 242, 255))
+    }
+    _authGrad.Rotation = 45
+    _authGrad.Parent = authFrame
+
+    local _authStroke = Instance.new("UIStroke")
+    _authStroke.Color = Color3.fromRGB(255, 105, 180)
+    _authStroke.Thickness = 2.5
+    _authStroke.Parent = authFrame
+
+    local draggingAuth = false
+    local authDragStart = Vector2.zero
+    local authStartPos = Vector2.zero
+    authFrame.InputBegan:Connect(function(inp)
+        if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
+            draggingAuth = true
+            authDragStart = Vector2.new(inp.Position.X, inp.Position.Y)
+            local pAbs = authFrame.Parent and authFrame.Parent.AbsolutePosition or Vector2.zero
+            authStartPos = authFrame.AbsolutePosition - pAbs
+        end
+    end)
+    UserInputService.InputChanged:Connect(function(inp)
+        if draggingAuth and (inp.UserInputType == Enum.UserInputType.MouseMovement or inp.UserInputType == Enum.UserInputType.Touch) then
+            local delta = Vector2.new(inp.Position.X, inp.Position.Y) - authDragStart
+            authFrame.AnchorPoint = Vector2.new(0, 0)
+            authFrame.Position = UDim2.new(0, authStartPos.X + delta.X, 0, authStartPos.Y + delta.Y)
+        end
+    end)
+    UserInputService.InputEnded:Connect(function(inp)
+        if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
+            draggingAuth = false
+        end
+    end)
+
+    local titleLbl = Instance.new("TextLabel")
+    titleLbl.Size = UDim2.new(1, -60, 0, 34)
+    titleLbl.Position = UDim2.new(0, 22, 0, 14)
+    titleLbl.BackgroundTransparency = 1
+    titleLbl.Text = "🌸 Carl Tool 卡密授權驗證 🔐"
+    titleLbl.TextColor3 = Color3.fromRGB(180, 50, 110)
+    titleLbl.Font = Enum.Font.GothamBlack
+    titleLbl.TextSize = 18
+    titleLbl.TextXAlignment = Enum.TextXAlignment.Left
+    titleLbl.Parent = authFrame
+
+    local hwidLbl = Instance.new("TextLabel")
+    hwidLbl.Size = UDim2.new(1, -44, 0, 20)
+    hwidLbl.Position = UDim2.new(0, 22, 0, 48)
+    hwidLbl.BackgroundTransparency = 1
+    hwidLbl.Text = "設備碼: " .. getDeviceHWID():sub(1, 26) .. "..."
+    hwidLbl.TextColor3 = Color3.fromRGB(130, 100, 120)
+    hwidLbl.Font = Enum.Font.Code
+    hwidLbl.TextSize = 12
+    hwidLbl.TextXAlignment = Enum.TextXAlignment.Left
+    hwidLbl.Parent = authFrame
+
+    local keyInput = Instance.new("TextBox")
+    keyInput.Size = UDim2.new(1, -44, 0, 42)
+    keyInput.Position = UDim2.new(0, 22, 0, 78)
+    keyInput.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    keyInput.PlaceholderText = "CARL-XXXX-XXXX-XXXX-XXXX"
+    keyInput.Text = ""
+    keyInput.TextColor3 = Color3.fromRGB(90, 70, 85)
+    keyInput.Font = Enum.Font.Code
+    keyInput.TextSize = 14
+    keyInput.ClearTextOnFocus = false
+    keyInput.Parent = authFrame
+    applyCorner(keyInput, 12)
+
+    local _keyStroke = Instance.new("UIStroke")
+    _keyStroke.Color = Color3.fromRGB(255, 190, 215)
+    _keyStroke.Thickness = 1.5
+    _keyStroke.Parent = keyInput
+
+    local msgLbl = Instance.new("TextLabel")
+    msgLbl.Size = UDim2.new(1, -44, 0, 22)
+    msgLbl.Position = UDim2.new(0, 22, 0, 128)
+    msgLbl.BackgroundTransparency = 1
+    msgLbl.Text = "💡 首次登入將自動綁定此設備 (一機一碼)"
+    msgLbl.TextColor3 = Color3.fromRGB(150, 70, 110)
+    msgLbl.Font = Enum.Font.GothamMedium
+    msgLbl.TextSize = 13
+    msgLbl.TextXAlignment = Enum.TextXAlignment.Left
+    msgLbl.TextTruncate = Enum.TextTruncate.AtEnd
+    msgLbl.Parent = authFrame
+
+    local verifyBtn = Instance.new("TextButton")
+    verifyBtn.Size = UDim2.new(0.47, 0, 0, 40)
+    verifyBtn.Position = UDim2.new(0, 22, 0, 162)
+    verifyBtn.BackgroundColor3 = Color3.fromRGB(255, 105, 180)
+    verifyBtn.Text = "✅ 驗證並啟動"
+    verifyBtn.TextColor3 = Color3.new(1, 1, 1)
+    verifyBtn.Font = Enum.Font.GothamBold
+    verifyBtn.TextSize = 15
+    verifyBtn.Parent = authFrame
+    applyCorner(verifyBtn, 14)
+
+    local copyHwidBtn = Instance.new("TextButton")
+    copyHwidBtn.Size = UDim2.new(0.40, 0, 0, 40)
+    copyHwidBtn.Position = UDim2.new(1, -22 - 168, 0, 162)
+    copyHwidBtn.BackgroundColor3 = Color3.fromRGB(255, 225, 238)
+    copyHwidBtn.Text = "📋 複製設備碼"
+    copyHwidBtn.TextColor3 = Color3.fromRGB(160, 50, 100)
+    copyHwidBtn.Font = Enum.Font.GothamBold
+    copyHwidBtn.TextSize = 14
+    copyHwidBtn.Parent = authFrame
+    applyCorner(copyHwidBtn, 14)
+
+    local closeAuthBtn = Instance.new("TextButton")
+    closeAuthBtn.Size = UDim2.new(0, 30, 0, 30)
+    closeAuthBtn.Position = UDim2.new(1, -40, 0, 14)
+    closeAuthBtn.BackgroundColor3 = Color3.fromRGB(255, 230, 240)
+    closeAuthBtn.Text = "❌"
+    closeAuthBtn.TextSize = 13
+    closeAuthBtn.Parent = authFrame
+    applyCorner(closeAuthBtn, 10)
+
+    closeAuthBtn.MouseButton1Click:Connect(function()
+        pcall(function() authGui:Destroy() end)
+    end)
+
+    copyHwidBtn.MouseButton1Click:Connect(function()
+        if setclipboard then
+            pcall(function() setclipboard(getDeviceHWID()) end)
+            msgLbl.Text = "📋 已將完整設備碼複製到剪貼簿！"
+        else
+            msgLbl.Text = "⚠️ 您的執行器不支援自動複製剪貼簿"
+        end
+    end)
+
+    local isChecking = false
+    verifyBtn.MouseButton1Click:Connect(function()
+        if isChecking then return end
+        isChecking = true
+        verifyBtn.Text = "⏳ 驗證中..."
+        local ok, resultMsg, expText = verifyLicenseKey(keyInput.Text)
+        msgLbl.Text = tostring(resultMsg or "")
+        if ok then
+            if expText and expText ~= "" then
+                activeKeyExpiresText = expText
+            end
+            pcall(function()
+                authFrame.Visible = false
+                authGui:Destroy()
+            end)
+            isVerified = true
+        else
+            verifyBtn.Text = "✅ 驗證並啟動"
+            isChecking = false
+        end
+    end)
+
+    while not isVerified do
+        if not authGui or not authGui.Parent then
+            return
+        end
+        task.wait(0.1)
+    end
+end
+
+-- 暗樁 1：啟動主介面前的最終完整性複查
+if not _isRuntimeHealthy() then
+    return
+end
+-- ==============================================================================
+-- 🌸 以下為主程式：驗證通過後正式載入 Carl Tool
+-- ==============================================================================
+local currentLanguage = "zh"
+local currentThemeIndex = 1
+local ThemePresets = {
+Pink = Color3.fromRGB(255, 105, 180),
+NeonCyan = Color3.fromRGB(0, 245, 255),
+NeonPurple = Color3.fromRGB(199, 125, 255),
+Gold = Color3.fromRGB(255, 215, 0),
+Green = Color3.fromRGB(50, 235, 130),
+Red = Color3.fromRGB(255, 99, 71),
+Blue = Color3.fromRGB(30, 144, 255),
+Orange = Color3.fromRGB(255, 140, 0),
+Lime = Color3.fromRGB(173, 255, 47),
+White = Color3.fromRGB(240, 248, 255)
+}
+local ThemeNames = {
+"🌸 櫻花粉 (Sakura)", "💎 電光青 (Neon Cyan)", "🔮 霓虹紫 (Neon Purple)",
+"👑 閃耀金 (Gold)", "🍃 翡翠綠 (Green)", "🍎 活力紅 (Red)",
+"🌊 湛藍海 (Blue)", "🍊 蜜柑橘 (Orange)", "🍋 青檸黃 (Lime)", "☁️ 雲朵白 (White)"
+}
+local ThemeKeys = {"Pink", "NeonCyan", "NeonPurple", "Gold", "Green", "Red", "Blue", "Orange", "Lime", "White"}
+local function getAccentColor()
+return ThemePresets[ThemeKeys[currentThemeIndex]] or ThemePresets.Pink
+end
+local Config = {
+AutoLaunch = false,
+AutoTp = false,
+AutoFixedTp = false,
+FixedTpX = 11.41,
+FixedTpY = 3.35,
+FixedTpZ = 9.28,
+AutoMerge = true,
+MergeIntervalSec = 5,
+MergeIntervalMs = 5000,
+AutoHatch = false,
+HatchIntervalMs = 10000,
+AutoFillEgg = false,
+FillEggIntervalMs = 10000,
+AutoPlaceBest = true,
+PlaceBestIntervalMs = 5000,
+AntiAfk = true,
+TargetPercent = 99.0,
+TargetValue = 20,
+ClickDelay = 0.25,
+AutoGacha = false,
+GachaMode = "ten",
+GachaIntervalMs = 250,
+GachaSkipX = 90,
+GachaSkipY = 90,
+MenuTextSize = 15,
+MenuBackgroundAlpha = 15,
+SavedThemeIndex = 1,
+SavedLanguage = "zh",
+PanelWidth = 780,
+PanelHeight = 510
+}
+local _SessionStats = {
+StartTime = tick(),
+LaunchCount = 0,
+GachaCount = 0,
+MergeCount = 0,
+HatchCount = 0,
+FillEggCount = 0,
+PlaceBestCount = 0
+}
+local _LastTick = 0
+local _LastFiredPct = 0
+local _saveQueued = false
+local _scriptDestroyed = false
+local _gachaRunId = 0
+local function _isGachaSessionValid(runId)
+return _isRuntimeHealthy()
+and (not _scriptDestroyed)
+and (Config.AutoGacha == true)
+and (runId == _gachaRunId)
+end
+local function _isGachaRunning()
+return _isRuntimeHealthy() and (not _scriptDestroyed) and (Config.AutoGacha == true)
+end
+local function saveConfig()
+if _saveQueued then return end
+_saveQueued = true
+task.delay(0.5, function()
+_saveQueued = false
+if writefile then
+pcall(function()
+Config.SavedThemeIndex = currentThemeIndex
+Config.SavedLanguage = currentLanguage
+writefile(CONFIG_FILE_NAME, HttpService:JSONEncode(Config))
+end)
+end
+end)
+end
+local function loadConfig()
+if readfile and isfile and isfile(CONFIG_FILE_NAME) then
+pcall(function()
+local decoded = HttpService:JSONDecode(readfile(CONFIG_FILE_NAME))
+if type(decoded) == "table" then
+for k, v in pairs(decoded) do
+if k ~= "AutoLaunch" and k ~= "AutoTp" and k ~= "AutoFixedTp" and k ~= "AutoGacha" and k ~= "AutoHatch" and k ~= "AutoFillEgg" and k ~= "AutoSellBag" and k ~= "SellBagIntervalMs" then
+Config[k] = v
+end
+end
+if decoded.MergeIntervalSec ~= nil then
+Config.MergeIntervalSec = math.clamp(tonumber(decoded.MergeIntervalSec) or 5, 5, 600)
+Config.MergeIntervalMs = Config.MergeIntervalSec * 1000
+else
+Config.MergeIntervalMs = math.clamp(tonumber(decoded.MergeIntervalMs) or 300000, 5000, 600000)
+Config.MergeIntervalSec = math.clamp(math.floor(Config.MergeIntervalMs / 1000 + 0.5), 5, 600)
+end
+Config.HatchIntervalMs = math.clamp(tonumber(decoded.HatchIntervalMs) or 10000, 250, 30000)
+Config.FillEggIntervalMs = math.clamp(tonumber(decoded.FillEggIntervalMs) or 10000, 250, 30000)
+Config.PlaceBestIntervalMs = math.clamp(tonumber(decoded.PlaceBestIntervalMs) or 3500, 500, 15000)
+Config.GachaIntervalMs = math.clamp(tonumber(decoded.GachaIntervalMs) or 250, 60, 3000)
+Config.TargetPercent = math.clamp(tonumber(decoded.TargetPercent) or 99.0, 50, 100)
+Config.TargetValue = tonumber(decoded.TargetValue) or 20
+Config.ClickDelay = math.clamp(tonumber(decoded.ClickDelay) or 0.25, 0.05, 2.0)
+Config.MenuTextSize = math.clamp(tonumber(decoded.MenuTextSize) or 15, 10, 22)
+Config.PanelWidth = math.clamp(tonumber(decoded.PanelWidth) or 780, 420, 1100)
+Config.PanelHeight = math.clamp(tonumber(decoded.PanelHeight) or 510, 320, 750)
+currentThemeIndex = math.clamp(tonumber(decoded.SavedThemeIndex) or 1, 1, #ThemeNames)
+currentLanguage = (decoded.SavedLanguage == "en") and "en" or "zh"
+end
+end)
+end
+end
+loadConfig()
+local TextDict = {
+zh = {
+LogsTab = "📊 運行日誌",
+MainTab = "⚡ 自動掛機",
+GachaTab = "🥚 自動抽蛋",
+ChangelogTab = "📜 更新日誌",
+AdminTab = "👑 管理員菜單",
+CfgTab = "⚙️ 參數設定",
+AutoLaunch = "🚀 光波完美一擊開關",
+TargetPct = "🎯 目標游標百分比 (%)",
+ClickDelay = "⏳ 釋放冷卻延遲 (ms)",
+AutoTp = "⚡ 自動往前TP (修正偏移)",
+AutoFixedTp = "📍 定點TP開關 (11.41, 3.35, 9.28)",
+AutoMerge = "⚗️ 背景自動一鍵合成",
+MergeInterval = "⏱️ 自動合成間隔 (秒)",
+AutoHatch = "🐣 背景自動孵化",
+HatchInterval = "⏱️ 自動孵化間隔 (ms，初始10秒)",
+AutoFillEgg = "🥚 背景自動放蛋",
+FillEggInterval = "⏱️ 自動放蛋間隔 (ms，初始10秒)",
+AutoPlaceBest = "⭐ 背景自動擺最賺",
+AntiAfk = "🛡️ 防掛機踢出 (AFK不掉線)",
+PlaceBestInterval = "⏱️ 自動擺最賺間隔 (ms)",
+AutoGacha = "💰 金錢祈願自動抽 (F6)",
+GachaInterval = "⚡ 連抽間隔 (ms，最大3000)",
+GachaSkipX = "↘️ 右下角跳過 X (%)",
+GachaSkipY = "↘️ 右下角跳過 Y (%)",
+ModeTen = "抽蛋模式：十連祈願",
+ModeSingle = "抽蛋模式：單抽祈願",
+ResetStats = "🔄 重置運行計時與數據",
+ChangelogTitle = "📜 完整版本更新日誌 (v1.0 → v1.9.0)",
+FontSize = "🔤 選單字體大小",
+MenuAlpha = "🎨 背景透明度 %",
+AccentTheme = "✨ 介面主題配色",
+ConfigSavedMsg = "💾 參數設定已優化並自動儲存！",
+On = "開",
+Off = "關"
+},
+en = {
+LogsTab = "📊 Logs",
+MainTab = "⚡ Farm",
+GachaTab = "🥚 Gacha",
+ChangelogTab = "📜 Changelog",
+AdminTab = "👑 Admin Menu",
+CfgTab = "⚙️ Settings",
+AutoLaunch = "🚀 Beam Perfect-Hit Auto",
+TargetPct = "🎯 Target Cursor (%)",
+ClickDelay = "⏳ Release Cooldown (ms)",
+AutoTp = "⚡ Auto TP",
+AutoFixedTp = "📍 Fixed TP (11.41, 3.35, 9.28)",
+AutoMerge = "⚗️ Background Auto Merge-All",
+MergeInterval = "⏱️ Auto Merge Interval (sec)",
+AutoHatch = "🐣 Background Auto Hatch",
+HatchInterval = "⏱️ Auto Hatch Interval (ms, init 10s)",
+AutoFillEgg = "🥚 Background Auto Fill Egg",
+FillEggInterval = "⏱️ Auto Fill Interval (ms, init 10s)",
+AutoPlaceBest = "⭐ Background Auto Place Best",
+AntiAfk = "🛡️ Anti-AFK (No Disconnect)",
+PlaceBestInterval = "⏱️ Place Best Interval (ms)",
+AutoGacha = "💰 Coin Gacha Auto (F6)",
+GachaInterval = "⚡ Pull Interval (ms, max 3000)",
+GachaSkipX = "↘️ Bottom-Right Skip X (%)",
+GachaSkipY = "↘️ Bottom-Right Skip Y (%)",
+ModeTen = "Mode: 10x Pull",
+ModeSingle = "Mode: 1x Pull",
+ResetStats = "🔄 Reset Stats",
+ChangelogTitle = "📜 Full Version Changelog (v1.0 → v1.9.0)",
+FontSize = "🔤 Font Size",
+MenuAlpha = "🎨 Menu Alpha %",
+AccentTheme = "✨ Theme Style",
+ConfigSavedMsg = "💾 Settings optimized & saved!",
+On = "ON",
+Off = "OFF"
+}
+}
+local function t(key)
+return (TextDict[currentLanguage] and TextDict[currentLanguage][key]) or TextDict.zh[key] or key
+end
+local _refreshLanguageText, _updateThemeStyle, _refreshChangelogText, _setGachaEnabled, _updateSidebarLayout
+local gui = Instance.new("ScreenGui")
+gui.Name = "Core_" .. _POLY_ID
+gui.ResetOnSpawn = false
+gui.IgnoreGuiInset = true
+gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+mountScreenGui(gui)
+local function applyHoverEffect(btn)
+local baseSize = btn.Size
+btn.MouseEnter:Connect(function()
+TweenService:Create(btn, TweenInfo.new(0.12, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+Size = baseSize + UDim2.new(0, 2, 0, 2)
+}):Play()
+end)
+btn.MouseLeave:Connect(function()
+TweenService:Create(btn, TweenInfo.new(0.12, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+Size = baseSize
+}):Play()
+end)
+end
+local function setupImage(imageLabel, assetId)
+pcall(function()
+imageLabel.Image = "rbxassetid://" .. tostring(assetId)
+task.spawn(function()
+task.wait(1.5)
+if imageLabel and imageLabel.Parent and not imageLabel.IsLoaded then
+imageLabel.Image = "rbxthumb://type=Asset&id=" .. tostring(assetId) .. "&w=420&h=420"
+end
+end)
+end)
+end
+-- ==============================================================================
+-- 🚀 絲滑拖曳控制器 (高跟隨阻尼 + 邊界安全夾取 + 鬆手精準對齊)
+-- ==============================================================================
+local activeDragTarget = nil
+local dragStartMouse = Vector2.zero
+local dragStartFramePos = Vector2.zero
+local dragDesiredPos = nil
+local dragMovedDistance = 0
+local resizing = false
+local resizeStartPos = Vector2.zero
+local startSize = Vector2.new(Config.PanelWidth, Config.PanelHeight)
+local desiredPanelSize = nil
+local mainPanel
+local _smoothSliderStepFn = nil
+local function _clampFramePosToViewport(frameObj, posVec)
+if not frameObj then return posVec end
+local cam = workspace.CurrentCamera
+local vp = (cam and cam.ViewportSize) or Vector2.new(1280, 720)
+local fSize = frameObj.AbsoluteSize
+local anchor = frameObj.AnchorPoint
+local minX = -fSize.X * anchor.X + 8
+local maxX = math.max(minX, vp.X - fSize.X * (1 - anchor.X) - 8)
+local minY = -fSize.Y * anchor.Y + 8
+local maxY = math.max(minY, vp.Y - fSize.Y * (1 - anchor.Y) - 8)
+return Vector2.new(
+math.clamp(posVec.X, minX, maxX),
+math.clamp(posVec.Y, minY, maxY)
+)
+end
+local function attachSmoothDrag(frameObj, onDragEnd, moveTargetFrame)
+frameObj.Active = true
+frameObj.Draggable = false
+local targetToMove = moveTargetFrame or frameObj
+    frameObj.InputBegan:Connect(function(inp)
+        if resizing then return end
+        if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
+            activeDragTarget = {
+                frame = targetToMove,
+                onEnd = onDragEnd
+            }
+            dragStartMouse = Vector2.new(inp.Position.X, inp.Position.Y)
+            local parentAbs = targetToMove.Parent and targetToMove.Parent.AbsolutePosition or Vector2.zero
+            local curRel = targetToMove.AbsolutePosition - parentAbs
+            targetToMove.AnchorPoint = Vector2.new(0, 0)
+            targetToMove.Position = UDim2.new(0, curRel.X, 0, curRel.Y)
+            dragStartFramePos = curRel
+            dragDesiredPos = _clampFramePosToViewport(targetToMove, curRel)
+            dragMovedDistance = 0
+        end
+    end)
+end
+UserInputService.InputChanged:Connect(function(inp)
+if inp.UserInputType ~= Enum.UserInputType.MouseMovement and inp.UserInputType ~= Enum.UserInputType.Touch then
+return
+end
+local curMouse = Vector2.new(inp.Position.X, inp.Position.Y)
+    if resizing then
+        local delta = curMouse - resizeStartPos
+        local newW = math.clamp(startSize.X + delta.X, 420, 1100)
+        local newH = math.clamp(startSize.Y + delta.Y, 320, 750)
+        desiredPanelSize = Vector2.new(newW, newH)
+        return
+    end
+
+    if activeDragTarget and activeDragTarget.frame and activeDragTarget.frame.Parent then
+        local delta = curMouse - dragStartMouse
+        dragMovedDistance = math.max(dragMovedDistance, delta.Magnitude)
+        dragDesiredPos = _clampFramePosToViewport(activeDragTarget.frame, dragStartFramePos + delta)
+    end
+end)
+UserInputService.InputEnded:Connect(function(inp)
+if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
+if resizing then
+resizing = false
+if desiredPanelSize and mainPanel then
+mainPanel.Size = UDim2.new(0, math.floor(desiredPanelSize.X + 0.5), 0, math.floor(desiredPanelSize.Y + 0.5))
+if _updateSidebarLayout then
+_updateSidebarLayout()
+end
+end
+desiredPanelSize = nil
+Config.PanelWidth = math.floor(mainPanel and mainPanel.AbsoluteSize.X or Config.PanelWidth)
+Config.PanelHeight = math.floor(mainPanel and mainPanel.AbsoluteSize.Y or Config.PanelHeight)
+saveConfig()
+end
+if activeDragTarget then
+local finished = activeDragTarget
+local finalPos = dragDesiredPos
+activeDragTarget = nil
+dragDesiredPos = nil
+if finished.frame and finished.frame.Parent and finalPos then
+local clamped = _clampFramePosToViewport(finished.frame, finalPos)
+finished.frame.AnchorPoint = Vector2.new(0, 0)
+finished.frame.Position = UDim2.new(0, math.floor(clamped.X + 0.5), 0, math.floor(clamped.Y + 0.5))
+end
+if finished.onEnd then
+finished.onEnd(dragMovedDistance)
+end
+end
+end
+end)
+-- 🌸 櫻花飄落裝飾特效層
+local sakuraGui = Instance.new("ScreenGui")
+sakuraGui.Name = "SakuraParticles_" .. _POLY_ID
+sakuraGui.ResetOnSpawn = false
+sakuraGui.IgnoreGuiInset = true
+sakuraGui.Parent = gui.Parent
+local _activeSakuraCount = 0
+local _MAX_SAKURA_COUNT = 5
+task.spawn(function()
+while sakuraGui and sakuraGui.Parent and not _scriptDestroyed do
+task.wait(math.random(50, 80) / 10)
+if _scriptDestroyed then break end
+if _activeSakuraCount < _MAX_SAKURA_COUNT then
+pcall(function()
+_activeSakuraCount = _activeSakuraCount + 1
+local sakura = Instance.new("TextLabel")
+sakura.Size = UDim2.new(0, 22, 0, 22)
+sakura.Position = UDim2.new(math.random(5, 95) / 100, 0, -0.05, 0)
+sakura.BackgroundTransparency = 1
+sakura.Text = "🌸"
+sakura.TextSize = math.random(14, 20)
+sakura.ZIndex = 999
+sakura.Parent = sakuraGui
+                local targetX = sakura.Position.X.Scale + (math.random(-15, 15) / 100)
+                local fallTween = TweenService:Create(sakura, TweenInfo.new(math.random(7, 12), Enum.EasingStyle.Linear), {
+                    Position = UDim2.new(targetX, 0, 1.05, 0),
+                    Rotation = math.random(-180, 180)
+                })
+                fallTween:Play()
+                fallTween.Completed:Connect(function()
+                    _activeSakuraCount = math.max(0, _activeSakuraCount - 1)
+                    sakura:Destroy()
+                end)
+            end)
+        end
+    end
+end)
+-- 🎀 縮小懸浮球
+local floatGui = Instance.new("ScreenGui")
+floatGui.Name = "Float_" .. _POLY_ID
+floatGui.ResetOnSpawn = false
+floatGui.IgnoreGuiInset = true
+floatGui.Parent = gui.Parent
+local floatingBtn = Instance.new("ImageButton")
+floatingBtn.Size = UDim2.new(0, 64, 0, 64)
+floatingBtn.Position = UDim2.new(0, 40, 0, 180)
+floatingBtn.BackgroundColor3 = Color3.fromRGB(255, 230, 242)
+floatingBtn.ScaleType = Enum.ScaleType.Fit
+floatingBtn.Active = true
+floatingBtn.Draggable = false
+floatingBtn.AutoButtonColor = false
+floatingBtn.Visible = false
+floatingBtn.ZIndex = 100
+floatingBtn.Parent = floatGui
+applyCorner(floatingBtn, 20)
+setupImage(floatingBtn, RAW_ASSET_ID)
+local floatStroke = Instance.new("UIStroke")
+floatStroke.Color = getAccentColor()
+floatStroke.Thickness = 2.5
+floatStroke.Parent = floatingBtn
+-- 主面板
+local vpNow = (workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize) or Vector2.new(1280, 720)
+local initW = math.clamp(Config.PanelWidth, 360, math.max(360, vpNow.X - 24))
+local initH = math.clamp(Config.PanelHeight, 280, math.max(280, vpNow.Y - 24))
+mainPanel = Instance.new("Frame")
+mainPanel.Size = UDim2.new(0, initW, 0, initH)
+mainPanel.AnchorPoint = Vector2.new(0.5, 0.5)
+mainPanel.Position = UDim2.new(0.5, 0, 0.5, 0)
+mainPanel.BackgroundColor3 = Color3.fromRGB(255, 240, 246)
+mainPanel.BackgroundTransparency = Config.MenuBackgroundAlpha / 100
+mainPanel.Active = true
+mainPanel.Draggable = false
+mainPanel.Visible = true
+mainPanel.Parent = gui
+applyCorner(mainPanel, 32)
+local lastFloatClickTime = 0
+attachSmoothDrag(floatingBtn, function(movedDist)
+if movedDist < 6 then
+local now = tick()
+if now - lastFloatClickTime > 0.15 then
+lastFloatClickTime = now
+mainPanel.Visible = true
+floatingBtn.Visible = false
+end
+end
+end)
+local _grad = Instance.new("UIGradient")
+_grad.Color = ColorSequence.new{
+ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 225, 238)),
+ColorSequenceKeypoint.new(1, Color3.fromRGB(235, 242, 255))
+}
+_grad.Rotation = 45
+_grad.Parent = mainPanel
+local glow = Instance.new("UIStroke")
+glow.Color = getAccentColor()
+glow.Thickness = 5
+glow.Transparency = 0.5
+glow.Parent = mainPanel
+local panelStroke = Instance.new("UIStroke")
+panelStroke.Color = getAccentColor()
+panelStroke.Transparency = 0.3
+panelStroke.Thickness = 1.5
+panelStroke.Parent = mainPanel
+-- 🖱️ 右下角縮放把手
+local resizeHandle = Instance.new("TextButton")
+resizeHandle.Size = UDim2.new(0, 24, 0, 24)
+resizeHandle.Position = UDim2.new(1, -24, 1, -24)
+resizeHandle.BackgroundTransparency = 1
+resizeHandle.Text = "◢"
+resizeHandle.TextColor3 = Color3.fromRGB(255, 105, 180)
+resizeHandle.Font = Enum.Font.GothamBold
+resizeHandle.TextSize = 14
+resizeHandle.ZIndex = 90
+resizeHandle.Parent = mainPanel
+resizeHandle.InputBegan:Connect(function(inp)
+if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
+activeDragTarget = nil
+resizing = true
+resizeStartPos = Vector2.new(inp.Position.X, inp.Position.Y)
+startSize = Vector2.new(mainPanel.AbsoluteSize.X, mainPanel.AbsoluteSize.Y)
+end
+end)
+RunService.RenderStepped:Connect(function(dt)
+if _scriptDestroyed then return end
+local clampedDt = math.clamp(dt, 0.001, 0.05)
+local dragAlpha = math.clamp(1 - math.exp(-42 * clampedDt), 0.35, 1)
+local uiAlpha = math.clamp(1 - math.exp(-28 * clampedDt), 0.2, 1)
+    if activeDragTarget and activeDragTarget.frame and activeDragTarget.frame.Parent and dragDesiredPos then
+        local f = activeDragTarget.frame
+        local targetPos = _clampFramePosToViewport(f, dragDesiredPos)
+        local curX = f.Position.X.Offset
+        local curY = f.Position.Y.Offset
+        local nextX = curX + (targetPos.X - curX) * dragAlpha
+        local nextY = curY + (targetPos.Y - curY) * dragAlpha
+        if math.abs(targetPos.X - nextX) < 0.4 then nextX = targetPos.X end
+        if math.abs(targetPos.Y - nextY) < 0.4 then nextY = targetPos.Y end
+        f.Position = UDim2.new(0, nextX, 0, nextY)
+    end
+
+    if resizing and desiredPanelSize and mainPanel then
+        local curW = mainPanel.Size.X.Offset
+        local curH = mainPanel.Size.Y.Offset
+        local nextW = curW + (desiredPanelSize.X - curW) * dragAlpha
+        local nextH = curH + (desiredPanelSize.Y - curH) * dragAlpha
+        if math.abs(desiredPanelSize.X - nextW) < 0.4 then nextW = desiredPanelSize.X end
+        if math.abs(desiredPanelSize.Y - nextH) < 0.4 then nextH = desiredPanelSize.Y end
+        mainPanel.Size = UDim2.new(0, nextW, 0, nextH)
+        if _updateSidebarLayout then
+            _updateSidebarLayout()
+        end
+    end
+
+    if _smoothSliderStepFn then
+        _smoothSliderStepFn(uiAlpha)
+    end
+end)
+-- 側邊欄
+local sideW = math.clamp(math.floor(initW * 0.26), 130, 200)
+local sidebar = Instance.new("Frame")
+sidebar.Size = UDim2.new(0, sideW, 1, -28)
+sidebar.Position = UDim2.new(0, 14, 0, 14)
+sidebar.BackgroundColor3 = Color3.fromRGB(255, 250, 253)
+sidebar.BackgroundTransparency = 0.35
+sidebar.ClipsDescendants = true
+sidebar.ZIndex = 5
+sidebar.Parent = mainPanel
+applyCorner(sidebar, 24)
+local _sidebarStroke = Instance.new("UIStroke")
+_sidebarStroke.Color = Color3.fromRGB(255, 190, 215)
+_sidebarStroke.Transparency = 0.5
+_sidebarStroke.Thickness = 1.2
+_sidebarStroke.Parent = sidebar
+attachSmoothDrag(sidebar, nil, mainPanel)
+local function _addBorderDragZone(sizeUDim, posUDim)
+local edge = Instance.new("Frame")
+edge.Size = sizeUDim
+edge.Position = posUDim
+edge.BackgroundTransparency = 1
+edge.ZIndex = 45
+edge.Parent = mainPanel
+attachSmoothDrag(edge, nil, mainPanel)
+end
+_addBorderDragZone(UDim2.new(1, -28, 0, 14), UDim2.new(0, 14, 0, 0))
+_addBorderDragZone(UDim2.new(1, -44, 0, 14), UDim2.new(0, 14, 1, -14))
+_addBorderDragZone(UDim2.new(0, 14, 1, 0), UDim2.new(0, 0, 0, 0))
+_addBorderDragZone(UDim2.new(0, 14, 1, -28), UDim2.new(1, -14, 0, 0))
+local sideLogo = Instance.new("ImageLabel")
+sideLogo.Size = UDim2.new(0, 64, 0, 64)
+sideLogo.Position = UDim2.new(0.5, -32, 0, 12)
+sideLogo.BackgroundTransparency = 1
+sideLogo.ScaleType = Enum.ScaleType.Fit
+sideLogo.ZIndex = 50
+sideLogo.Parent = sidebar
+setupImage(sideLogo, RAW_ASSET_ID)
+local _sideLogoText = Instance.new("TextLabel")
+_sideLogoText.Size = UDim2.new(1, -12, 0, 24)
+_sideLogoText.Position = UDim2.new(0, 6, 0, 82)
+_sideLogoText.BackgroundTransparency = 1
+_sideLogoText.Text = "🌸 CARL TOOL 🌸"
+_sideLogoText.TextColor3 = Color3.fromRGB(120, 80, 105)
+_sideLogoText.Font = Enum.Font.GothamBlack
+_sideLogoText.TextSize = 14
+_sideLogoText.TextTruncate = Enum.TextTruncate.AtEnd
+_sideLogoText.ZIndex = 50
+_sideLogoText.Parent = sidebar
+local navContainer = Instance.new("ScrollingFrame")
+navContainer.Size = UDim2.new(1, -20, 1, -114)
+navContainer.Position = UDim2.new(0, 10, 0, 110)
+navContainer.BackgroundTransparency = 1
+navContainer.BorderSizePixel = 0
+navContainer.CanvasSize = UDim2.new(0, 0, 0, 0)
+navContainer.ScrollBarThickness = 4
+navContainer.ScrollBarImageColor3 = getAccentColor()
+navContainer.ScrollingDirection = Enum.ScrollingDirection.Y
+navContainer.ElasticBehavior = Enum.ElasticBehavior.WhenScrollable
+navContainer.ClipsDescendants = true
+navContainer.ZIndex = 5
+navContainer.Parent = sidebar
+local navLayout = Instance.new("UIListLayout")
+navLayout.SortOrder = Enum.SortOrder.LayoutOrder
+navLayout.Padding = UDim.new(0, 6)
+navLayout.Parent = navContainer
+navLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+navContainer.CanvasSize = UDim2.new(0, 0, 0, navLayout.AbsoluteContentSize.Y + 8)
+end)
+local contentArea = Instance.new("Frame")
+contentArea.Size = UDim2.new(1, -(sideW + 32), 1, -28)
+contentArea.Position = UDim2.new(0, sideW + 20, 0, 14)
+contentArea.BackgroundTransparency = 1
+contentArea.ZIndex = 5
+contentArea.Parent = mainPanel
+-- 頂部控制按鈕列
+local topControls = Instance.new("Frame")
+topControls.Size = UDim2.new(0, 160, 0, 32)
+topControls.Position = UDim2.new(1, -160, 0, 6)
+topControls.BackgroundTransparency = 1
+topControls.ZIndex = 60
+topControls.Parent = contentArea
+local function makeTopBtn(xOffset, textStr, color3)
+local b = Instance.new("TextButton")
+b.Size = UDim2.new(0, 32, 0, 32)
+b.Position = UDim2.new(0, xOffset, 0, 0)
+b.BackgroundColor3 = Color3.fromRGB(255, 235, 245)
+b.Text = textStr
+b.TextColor3 = color3
+b.Font = Enum.Font.GothamBold
+b.TextSize = 14
+b.ZIndex = 60
+b.Parent = topControls
+applyCorner(b, 12)
+applyHoverEffect(b)
+return b
+end
+local discordBtn = makeTopBtn(0, "💬", Color3.fromRGB(114, 137, 218))
+local langBtn = makeTopBtn(40, (currentLanguage == "zh") and "EN" or "中文", Color3.fromRGB(120, 80, 105))
+langBtn.TextSize = 11
+local minimizeBtn = makeTopBtn(80, "➖", Color3.fromRGB(120, 80, 105))
+local closeBtn = makeTopBtn(120, "❌", Color3.fromRGB(239, 68, 68))
+discordBtn.MouseButton1Click:Connect(function()
+if setclipboard then pcall(function() setclipboard(DISCORD_INVITE_URL) end) end
+end)
+langBtn.MouseButton1Click:Connect(function()
+currentLanguage = (currentLanguage == "zh") and "en" or "zh"
+langBtn.Text = (currentLanguage == "zh") and "EN" or "中文"
+if _refreshLanguageText then _refreshLanguageText() end
+saveConfig()
+end)
+minimizeBtn.MouseButton1Click:Connect(function()
+mainPanel.Visible = false
+floatingBtn.Visible = true
+end)
+closeBtn.MouseButton1Click:Connect(function()
+_scriptDestroyed = true
+Config.AutoLaunch = false
+Config.AutoTp = false
+Config.AutoFixedTp = false
+Config.AutoGacha = false
+Config.AutoMerge = true
+Config.AutoHatch = false
+Config.AutoFillEgg = false
+Config.AutoPlaceBest = true
+_gachaRunId = _gachaRunId + 1
+pcall(function()
+if sakuraGui then sakuraGui:Destroy() end
+if floatGui then floatGui:Destroy() end
+if gui then gui:Destroy() end
+end)
+end)
+local pageContainer = Instance.new("Frame")
+pageContainer.Size = UDim2.new(1, 0, 1, -46)
+pageContainer.Position = UDim2.new(0, 0, 0, 46)
+pageContainer.BackgroundTransparency = 1
+pageContainer.ClipsDescendants = true
+pageContainer.ZIndex = 10
+pageContainer.Parent = contentArea
+local function createPage(useListLayout, canvasHeight)
+local p = Instance.new("ScrollingFrame")
+p.Size = UDim2.new(1, 0, 1, 0)
+p.BackgroundTransparency = 1
+p.CanvasSize = UDim2.new(0, 0, 0, canvasHeight or 560)
+p.ScrollBarThickness = 4
+p.ScrollBarImageColor3 = getAccentColor()
+p.Visible = false
+p.ZIndex = 10
+p.Parent = pageContainer
+if useListLayout then
+local layout = Instance.new("UIListLayout")
+layout.SortOrder = Enum.SortOrder.LayoutOrder
+layout.Padding = UDim.new(0, 12)
+layout.Parent = p
+end
+return p
+end
+local mainPage = createPage(true, 1020)
+local gachaPage = createPage(true, 460)
+local logsPage = createPage(true, 460)
+local changelogPage = createPage(true, 1520)
+local adminPage = createPage(true, 560)
+local cfgPage = createPage(true, 490)
+mainPage.Visible = true
+local navButtons = {}
+local function createNavBtn(textKey, pageRef, order, isDefault)
+local btn = Instance.new("TextButton")
+btn.Size = UDim2.new(1, 0, 0, 40)
+btn.BackgroundColor3 = isDefault and Color3.fromRGB(255, 220, 238) or Color3.fromRGB(255, 242, 248)
+btn.BackgroundTransparency = isDefault and 0.2 or 0.5
+btn.Text = "   " .. t(textKey)
+btn.TextColor3 = isDefault and Color3.fromRGB(180, 50, 110) or Color3.fromRGB(110, 90, 105)
+btn.Font = Enum.Font.GothamMedium
+btn.TextSize = math.clamp(Config.MenuTextSize, 11, 16)
+btn.TextXAlignment = Enum.TextXAlignment.Left
+btn.TextTruncate = Enum.TextTruncate.AtEnd
+btn.TextWrapped = false
+btn.ZIndex = 20
+btn.LayoutOrder = order
+btn.Parent = navContainer
+applyCorner(btn, 16)
+applyHoverEffect(btn)
+    local pad = Instance.new("UIPadding")
+    pad.PaddingLeft = UDim.new(0, 6)
+    pad.PaddingRight = UDim.new(0, 6)
+    pad.Parent = btn
+
+    btn.MouseButton1Click:Connect(function()
+        for _, p in ipairs({mainPage, gachaPage, logsPage, changelogPage, adminPage, cfgPage}) do
+            if p == pageRef then
+                p.Visible = true
+                p.Position = UDim2.new(0, 10, 0, 0)
+                TweenService:Create(p, TweenInfo.new(0.16, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                    Position = UDim2.new(0, 0, 0, 0)
+                }):Play()
+            else
+                p.Visible = false
+            end
+        end
+        for _, b in ipairs(navButtons) do
+            local isSel = (b.Btn == btn)
+            TweenService:Create(b.Btn, TweenInfo.new(0.14, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                BackgroundColor3 = isSel and Color3.fromRGB(255, 220, 238) or Color3.fromRGB(255, 242, 248),
+                BackgroundTransparency = isSel and 0.2 or 0.5,
+                TextColor3 = isSel and Color3.fromRGB(180, 50, 110) or Color3.fromRGB(110, 90, 105)
+            }):Play()
+        end
+    end)
+    table.insert(navButtons, {Btn = btn, Key = textKey})
+    return btn
+end
+createNavBtn("MainTab", mainPage, 1, true)
+createNavBtn("GachaTab", gachaPage, 2, false)
+createNavBtn("LogsTab", logsPage, 3, false)
+createNavBtn("ChangelogTab", changelogPage, 4, false)
+createNavBtn("AdminTab", adminPage, 5, false)
+createNavBtn("CfgTab", cfgPage, 6, false)
+_updateSidebarLayout = function()
+local navH = navContainer.AbsoluteSize.Y
+local count = #navButtons
+if count <= 0 then return end
+local pad = 6
+navLayout.Padding = UDim.new(0, pad)
+local btnH = 40
+if navH > 0 then
+local fitH = math.floor((navH - pad * (count - 1)) / count)
+if fitH < 36 then
+btnH = 38
+else
+btnH = math.clamp(fitH, 38, 44)
+end
+end
+for _, item in ipairs(navButtons) do
+item.Btn.Size = UDim2.new(1, -6, 0, btnH)
+local idealFont = math.clamp(Config.MenuTextSize, 11, 16)
+item.Btn.TextSize = math.min(idealFont, math.max(11, btnH - 12))
+end
+navContainer.CanvasSize = UDim2.new(0, 0, 0, navLayout.AbsoluteContentSize.Y + 8)
+end
+task.defer(_updateSidebarLayout)
+local allInteractiveElements = {}
+-- ==============================================================================
+-- 🎛️ 開關與滑桿元件
+-- ==============================================================================
+local function _makeToggle(parent, textKey, initialState, callback, onSyncReady)
+local f = Instance.new("Frame")
+f.Size = UDim2.new(1, -6, 0, 56)
+f.BackgroundColor3 = Color3.fromRGB(255, 245, 250)
+f.BackgroundTransparency = 0.3
+f.ClipsDescendants = true
+f.ZIndex = 15
+f.Parent = parent
+applyCorner(f, 16)
+    local _fStroke = Instance.new("UIStroke")
+    _fStroke.Color = Color3.fromRGB(255, 210, 230)
+    _fStroke.Transparency = 0.6
+    _fStroke.Thickness = 1
+    _fStroke.Parent = f
+
+    local lbl = Instance.new("TextLabel")
+    lbl.Size = UDim2.new(1, -104, 1, 0)
+    lbl.Position = UDim2.new(0, 18, 0, 0)
+    lbl.BackgroundTransparency = 1
+    lbl.Text = t(textKey)
+    lbl.TextColor3 = Color3.fromRGB(90, 70, 85)
+    lbl.Font = Enum.Font.GothamMedium
+    lbl.TextSize = Config.MenuTextSize
+    lbl.TextXAlignment = Enum.TextXAlignment.Left
+    lbl.TextTruncate = Enum.TextTruncate.AtEnd
+    lbl.TextWrapped = false
+    lbl.ZIndex = 16
+    lbl.Parent = f
+    table.insert(allInteractiveElements, {Obj = lbl, Key = textKey, MaxSize = 18})
+
+    local tBtn = Instance.new("TextButton")
+    tBtn.Size = UDim2.new(0, 62, 0, 34)
+    tBtn.Position = UDim2.new(1, -74, 0.5, -17)
+    tBtn.BackgroundColor3 = initialState and Color3.fromRGB(46, 204, 113) or Color3.fromRGB(220, 205, 215)
+    tBtn.AutoButtonColor = false
+    tBtn.Text = ""
+    tBtn.ZIndex = 16
+    tBtn.Parent = f
+    applyCorner(tBtn, 17)
+
+    local knob = Instance.new("Frame")
+    knob.Size = UDim2.new(0, 28, 0, 28)
+    knob.Position = initialState and UDim2.new(1, -31, 0.5, -14) or UDim2.new(0, 3, 0.5, -14)
+    knob.BackgroundColor3 = Color3.new(1, 1, 1)
+    knob.ZIndex = 17
+    knob.Parent = tBtn
+    applyCorner(knob, 14)
+
+    local state = initialState
+    local function applyState(newState, skipCallback)
+        state = not not newState
+        local targetColor = state and Color3.fromRGB(46, 204, 113) or Color3.fromRGB(220, 205, 215)
+        local targetPos = state and UDim2.new(1, -31, 0.5, -14) or UDim2.new(0, 3, 0.5, -14)
+
+        TweenService:Create(tBtn, TweenInfo.new(0.14, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            BackgroundColor3 = targetColor
+        }):Play()
+        TweenService:Create(knob, TweenInfo.new(0.14, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            Position = targetPos,
+            Size = UDim2.new(0, 30, 0, 28)
+        }):Play()
+        task.delay(0.08, function()
+            if knob and knob.Parent then
+                TweenService:Create(knob, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                    Size = UDim2.new(0, 28, 0, 28)
+                }):Play()
+            end
+        end)
+
+        if not skipCallback then
+            callback(state)
+            saveConfig()
+        end
+    end
+
+    tBtn.MouseButton1Click:Connect(function()
+        applyState(not state, false)
+    end)
+
+    if onSyncReady then
+        onSyncReady(function(v)
+            applyState(v, true)
+        end)
+    end
+
+    table.insert(allInteractiveElements, {
+        ToggleBtn = tBtn,
+        Knob = knob,
+        GetState = function() return state end
+    })
+end
+local _smoothSliderEntries = {}
+_smoothSliderStepFn = function(alpha)
+for _, entry in ipairs(_smoothSliderEntries) do
+local cur = entry.currentRel
+local target = entry.targetRel
+local nextRel = cur + (target - cur) * alpha
+if math.abs(target - nextRel) < 0.002 then
+nextRel = target
+end
+entry.currentRel = nextRel
+if entry.fill and entry.fill.Parent then
+entry.fill.Size = UDim2.new(math.clamp(nextRel, 0, 1), 0, 1, 0)
+end
+if entry.knob and entry.knob.Parent then
+entry.knob.Position = UDim2.new(math.clamp(nextRel, 0, 1), -8, 0.5, -8)
+end
+end
+end
+local function _makeSlider(parent, textKey, defaultVal, minVal, maxVal, callback, stepVal)
+stepVal = stepVal or 1
+local container = Instance.new("Frame")
+container.Size = UDim2.new(1, -6, 0, 64)
+container.BackgroundColor3 = Color3.fromRGB(255, 245, 250)
+container.BackgroundTransparency = 0.3
+container.ClipsDescendants = false
+container.ZIndex = 15
+container.Parent = parent
+applyCorner(container, 16)
+    local _cStroke = Instance.new("UIStroke")
+    _cStroke.Color = Color3.fromRGB(255, 210, 230)
+    _cStroke.Transparency = 0.6
+    _cStroke.Thickness = 1
+    _cStroke.Parent = container
+
+    local lbl = Instance.new("TextLabel")
+    lbl.Size = UDim2.new(1, -110, 0, 24)
+    lbl.Position = UDim2.new(0, 18, 0, 10)
+    lbl.BackgroundTransparency = 1
+    lbl.Text = t(textKey)
+    lbl.TextColor3 = Color3.fromRGB(90, 70, 85)
+    lbl.Font = Enum.Font.GothamMedium
+    lbl.TextSize = Config.MenuTextSize
+    lbl.TextXAlignment = Enum.TextXAlignment.Left
+    lbl.TextTruncate = Enum.TextTruncate.AtEnd
+    lbl.TextWrapped = false
+    lbl.ZIndex = 16
+    lbl.Parent = container
+    table.insert(allInteractiveElements, {Obj = lbl, Key = textKey, MaxSize = 18})
+
+    local valBox = Instance.new("TextLabel")
+    valBox.Size = UDim2.new(0, 78, 0, 24)
+    valBox.Position = UDim2.new(1, -96, 0, 10)
+    valBox.BackgroundTransparency = 1
+    valBox.Text = (stepVal < 1) and string.format("%.1f", defaultVal) or tostring(defaultVal)
+    valBox.TextColor3 = Color3.fromRGB(180, 50, 110)
+    valBox.Font = Enum.Font.Code
+    valBox.TextSize = Config.MenuTextSize
+    valBox.TextXAlignment = Enum.TextXAlignment.Right
+    valBox.TextTruncate = Enum.TextTruncate.AtEnd
+    valBox.ZIndex = 16
+    valBox.Parent = container
+    table.insert(allInteractiveElements, {ValBox = valBox, MaxSize = 18})
+
+    local sliderHit = Instance.new("TextButton")
+    sliderHit.Size = UDim2.new(1, -36, 0, 26)
+    sliderHit.Position = UDim2.new(0, 18, 0, 33)
+    sliderHit.BackgroundTransparency = 1
+    sliderHit.Text = ""
+    sliderHit.AutoButtonColor = false
+    sliderHit.ZIndex = 16
+    sliderHit.Parent = container
+
+    local sliderBg = Instance.new("Frame")
+    sliderBg.Size = UDim2.new(1, 0, 0, 10)
+    sliderBg.Position = UDim2.new(0, 0, 0.5, -5)
+    sliderBg.BackgroundColor3 = Color3.fromRGB(235, 215, 225)
+    sliderBg.ZIndex = 16
+    sliderBg.Parent = sliderHit
+    applyCorner(sliderBg, 5)
+
+    local initPercent = math.clamp((defaultVal - minVal) / math.max(maxVal - minVal, 1), 0, 1)
+    local sliderFill = Instance.new("Frame")
+    sliderFill.Size = UDim2.new(initPercent, 0, 1, 0)
+    sliderFill.BackgroundColor3 = Color3.fromRGB(255, 105, 180)
+    sliderFill.ZIndex = 17
+    sliderFill.Parent = sliderBg
+    applyCorner(sliderFill, 5)
+    table.insert(allInteractiveElements, {SliderFill = sliderFill})
+
+    local sliderKnob = Instance.new("Frame")
+    sliderKnob.Size = UDim2.new(0, 16, 0, 16)
+    sliderKnob.Position = UDim2.new(initPercent, -8, 0.5, -8)
+    sliderKnob.BackgroundColor3 = Color3.new(1, 1, 1)
+    sliderKnob.ZIndex = 18
+    sliderKnob.Parent = sliderBg
+    applyCorner(sliderKnob, 8)
+
+    local knobStroke = Instance.new("UIStroke")
+    knobStroke.Color = getAccentColor()
+    knobStroke.Thickness = 2
+    knobStroke.Parent = sliderKnob
+    table.insert(allInteractiveElements, {KnobStroke = knobStroke})
+
+    local sliderEntry = {
+        fill = sliderFill,
+        knob = sliderKnob,
+        currentRel = initPercent,
+        targetRel = initPercent
+    }
+    table.insert(_smoothSliderEntries, sliderEntry)
+
+    local draggingSlider = false
+    local lastVal = defaultVal
+
+    local function update(inputX)
+        local rel = math.clamp((inputX - sliderBg.AbsolutePosition.X) / math.max(sliderBg.AbsoluteSize.X, 1), 0, 1)
+        local rawVal = minVal + (maxVal - minVal) * rel
+        local val = math.floor(rawVal / stepVal + 0.5) * stepVal
+        val = math.clamp(val, minVal, maxVal)
+        local exactRel = math.clamp((val - minVal) / math.max(maxVal - minVal, 1), 0, 1)
+        sliderEntry.targetRel = exactRel
+        valBox.Text = (stepVal < 1) and string.format("%.1f", val) or tostring(math.floor(val + 0.5))
+        if math.abs(val - lastVal) >= (stepVal * 0.5) then
+            lastVal = val
+            callback(val)
+        end
+    end
+
+    sliderHit.InputBegan:Connect(function(inp)
+        if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
+            activeDragTarget = nil
+            draggingSlider = true
+            TweenService:Create(sliderKnob, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                Size = UDim2.new(0, 20, 0, 20),
+                Position = UDim2.new(sliderEntry.targetRel, -10, 0.5, -10)
+            }):Play()
+            update(inp.Position.X)
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(inp)
+        if draggingSlider and (inp.UserInputType == Enum.UserInputType.MouseMovement or inp.UserInputType == Enum.UserInputType.Touch) then
+            update(inp.Position.X)
+        end
+    end)
+
+    UserInputService.InputEnded:Connect(function(inp)
+        if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
+            if draggingSlider then
+                draggingSlider = false
+                TweenService:Create(sliderKnob, TweenInfo.new(0.12, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                    Size = UDim2.new(0, 16, 0, 16)
+                }):Play()
+                saveConfig()
+            end
+        end
+    end)
+end
+-- ==============================================================================
+-- ⚡ 1. 光波完美一擊 & 自動掛機 (MainTab)
+-- ==============================================================================
+local liveStatusText = "🌸 狀態：待機中 (Standby)..."
+local syncLaunchVisual = nil
+local function _setBeamAutoRelease(v)
+local nextState = not not v
+Config.AutoLaunch = nextState
+_BeamRoundLocked = false
+if syncLaunchVisual then
+syncLaunchVisual(nextState)
+end
+if not nextState then
+liveStatusText = "⏸️ 狀態：光波完美一擊已暫停"
+else
+liveStatusText = string.format("🚀 光波完美一擊已啟動 (目標 %.1f%%)", Config.TargetPercent)
+end
+end
+_makeToggle(mainPage, "AutoLaunch", Config.AutoLaunch, function(v)
+_setBeamAutoRelease(v)
+end, function(setter)
+syncLaunchVisual = setter
+end)
+_makeSlider(mainPage, "TargetPct", Config.TargetPercent, 50, 100, function(v)
+Config.TargetPercent = v
+end, 0.5)
+_makeSlider(mainPage, "ClickDelay", math.floor(Config.ClickDelay * 1000), 50, 1000, function(v)
+Config.ClickDelay = v / 1000
+end)
+_makeToggle(mainPage, "AutoTp", Config.AutoTp, function(v)
+Config.AutoTp = v
+if v then
+liveStatusText = "⚡ 自動往前TP已啟動 (修正偏移)..."
+else
+liveStatusText = "⏸️ 自動往前TP已停止"
+end
+end)
+local _lastFixedTpTick = 0
+local function _teleportToFixedPoint()
+if not _isRuntimeHealthy() then return end
+pcall(function()
+local _char = lp.Character
+local _hrp = _char and (_char:FindFirstChild("HumanoidRootPart") or _char.PrimaryPart)
+if not _char or not _hrp then return end
+for _, part in ipairs(_char:GetDescendants()) do
+if part:IsA("BasePart") then
+part.AssemblyLinearVelocity = Vector3.zero
+part.AssemblyAngularVelocity = Vector3.zero
+end
+end
+local tx = tonumber(Config.FixedTpX) or 11.41
+local ty = tonumber(Config.FixedTpY) or 3.35
+local tz = tonumber(Config.FixedTpZ) or 9.28
+local destPos = Vector3.new(tx, ty, tz)
+local _look = _hrp.CFrame.LookVector
+local _flat = Vector3.new(_look.X, 0, _look.Z)
+local targetCf = (_flat.Magnitude > 1e-4)
+and CFrame.lookAt(destPos, destPos + _flat.Unit)
+or CFrame.new(destPos)
+if _char.PivotTo then
+_char:PivotTo(targetCf)
+else
+_hrp.CFrame = targetCf
+end
+end)
+end
+_makeToggle(mainPage, "AutoFixedTp", Config.AutoFixedTp, function(v)
+Config.AutoFixedTp = v
+if v then
+_lastFixedTpTick = tick()
+_teleportToFixedPoint()
+liveStatusText = string.format("📍 定點TP已啟動 -> (%.2f, %.2f, %.2f)", Config.FixedTpX or 11.41, Config.FixedTpY or 3.35, Config.FixedTpZ or 9.28)
+else
+liveStatusText = "⏸️ 定點TP已停止"
+end
+end)
+_makeToggle(mainPage, "AutoMerge", Config.AutoMerge, function(v)
+Config.AutoMerge = v
+if not v then
+liveStatusText = "⏸️ 背景自動一鍵合成已停止"
+else
+liveStatusText = "⚗️ 背景自動一鍵合成運行中..."
+end
+end)
+_makeSlider(mainPage, "MergeInterval", Config.MergeIntervalSec or 5, 5, 600, function(v)
+Config.MergeIntervalSec = v
+Config.MergeIntervalMs = v * 1000
+end)
+local function _fireMergeBtnConnections(btn)
+local fired = false
+if getconnections then
+for _, ev in ipairs({"MouseButton1Click", "Activated"}) do
+pcall(function()
+for _, conn in ipairs(getconnections(btn[ev])) do
+if conn.Fire then
+conn:Fire()
+fired = true
+elseif conn.Function then
+conn.Function()
+fired = true
+end
+end
+end)
+if fired then break end
+end
+end
+return fired
+end
+task.spawn(function()
+while not _scriptDestroyed do
+if not _isRuntimeHealthy() then break end
+if Config.AutoMerge then
+pcall(function()
+local mUI = pg:FindFirstChild("MainUI")
+local forge = mUI and mUI:FindFirstChild("Forge")
+local header = forge and forge:FindFirstChild("Header")
+local mergeBtn = header and header:FindFirstChild("MergeAll")
+if forge and mergeBtn then
+local origVisible = forge.Visible
+local origPos = forge:IsA("GuiObject") and forge.Position or nil
+                    if not origVisible and forge:IsA("GuiObject") then
+                        forge.Position = UDim2.new(5, 0, 5, 0)
+                        forge.Visible = true
+                        task.wait(0.15)
+                    end
+
+                    local txt = tostring(mergeBtn.Text or "")
+                    local canMergeCount = tonumber(txt:match("可合%s*(%d+)%s*次"))
+                        or tonumber(txt:match("一鍵合成%s*(%d+)%s*次"))
+                        or 1
+
+                    if Config.AutoMerge and not _scriptDestroyed then
+                        local firstOk = _fireMergeBtnConnections(mergeBtn)
+                        task.wait(0.15)
+                        local secondOk = false
+                        if Config.AutoMerge and not _scriptDestroyed and mergeBtn and mergeBtn.Parent then
+                            secondOk = _fireMergeBtnConnections(mergeBtn)
+                        end
+                        if firstOk or secondOk then
+                            _SessionStats.MergeCount = _SessionStats.MergeCount + canMergeCount
+                            liveStatusText = string.format("⚗️ 自動合成雙擊完成 (+%d | 累計: %d)", canMergeCount, _SessionStats.MergeCount)
+                        end
+                    end
+
+                    if not origVisible and forge:IsA("GuiObject") then
+                        forge.Visible = false
+                        if origPos then
+                            forge.Position = origPos
+                        end
+                    end
+                end
+            end)
+        end
+        local waitSec = math.max(1, tonumber(Config.MergeIntervalSec) or ((tonumber(Config.MergeIntervalMs) or 5000) / 1000))
+        local elapsedWait = 0
+        while elapsedWait < waitSec and not _scriptDestroyed do
+            local step = math.min(0.5, waitSec - elapsedWait)
+            task.wait(step)
+            elapsedWait = elapsedWait + step
+        end
+    end
+end)
+_makeToggle(mainPage, "AutoHatch", Config.AutoHatch, function(v)
+Config.AutoHatch = v
+if not v then
+liveStatusText = "⏸️ 背景自動孵化已停止"
+else
+liveStatusText = "🐣 背景自動孵化運行中..."
+end
+end)
+_makeSlider(mainPage, "HatchInterval", Config.HatchIntervalMs or 10000, 250, 30000, function(v)
+Config.HatchIntervalMs = v
+end)
+_makeToggle(mainPage, "AutoFillEgg", Config.AutoFillEgg, function(v)
+Config.AutoFillEgg = v
+if not v then
+liveStatusText = "⏸️ 背景自動放蛋已停止"
+else
+liveStatusText = "🥚 背景自動放蛋運行中..."
+end
+end)
+_makeSlider(mainPage, "FillEggInterval", Config.FillEggIntervalMs or 10000, 250, 30000, function(v)
+Config.FillEggIntervalMs = v
+end)
+local function _parseTimerSecondsFromText(str)
+if not str or str == "" then return nil end
+local h, m, s = tostring(str):match("(%d+):(%d%d):(%d%d)")
+if h and m and s then
+return (tonumber(h) or 0) * 3600 + (tonumber(m) or 0) * 60 + (tonumber(s) or 0)
+end
+local mm, ss = tostring(str):match("(%d+):(%d%d)")
+if mm and ss then
+return (tonumber(mm) or 0) * 60 + (tonumber(ss) or 0)
+end
+return nil
+end
+local function _suppressNestToastPopups()
+local suppressed = 0
+for _, g in ipairs(pg:GetChildren()) do
+if g:IsA("ScreenGui") and g.Name ~= gui.Name and g.Name ~= sakuraGui.Name and g.Name ~= floatGui.Name then
+for _, d in ipairs(g:GetDescendants()) do
+if d:IsA("TextLabel") or d:IsA("TextButton") then
+local txt = tostring(d.Text or "")
+if txt:find("還沒有孵好的蛋") or txt:find("等倒數結束再來領") or txt:find("靈獸巢滿了") or txt:find("先把孵好的靈寵領出來") then
+local banner = d
+while banner.Parent and banner.Parent ~= g do
+local p = banner.Parent
+if p:IsA("Frame") or p:IsA("CanvasGroup") or p:IsA("ImageLabel") then
+if p.AbsoluteSize.Y >= 24 and p.AbsoluteSize.Y <= 180 then
+banner = p
+if p:IsA("UIListLayout") or p:IsA("UIGridLayout") then
+break
+end
+else
+break
+end
+else
+break
+end
+end
+if banner:IsA("GuiObject") and banner.Visible then
+banner.Visible = false
+suppressed = suppressed + 1
+end
+end
+end
+end
+end
+end
+return suppressed
+end
+local function _inspectSlotHatchState(slot)
+if not slot then
+return { ready = false, remainSec = nil, claimBtn = nil, hasActiveEgg = false }
+end
+    local claimBtn = slot:FindFirstChild("Claim")
+    local hasReadyText = false
+    local hasRobuxPrompt = false
+    local hasNotReadyPrompt = false
+    local hasActiveEgg = false
+    local minRemainSec = nil
+
+    for _, d in ipairs(slot:GetDescendants()) do
+        if d:IsA("TextLabel") or d:IsA("TextButton") then
+            local txt = tostring(d.Text or "")
+            if txt ~= "" then
+                if txt:find("孵好了") or txt:find("可孵化") or txt:find("領取") then
+                    hasReadyText = true
+                end
+                if txt:find("R%$") or txt:find("立即") or txt:find("加速") then
+                    hasRobuxPrompt = true
+                end
+                if txt:find("還沒有孵好") or txt:find("孵化中") then
+                    hasNotReadyPrompt = true
+                    hasActiveEgg = true
+                end
+                local sec = _parseTimerSecondsFromText(txt)
+                if sec ~= nil then
+                    hasActiveEgg = true
+                    if minRemainSec == nil or sec < minRemainSec then
+                        minRemainSec = sec
+                    end
+                end
+            end
+        end
+    end
+
+    if claimBtn and (claimBtn:IsA("TextButton") or claimBtn:IsA("TextLabel")) then
+        local cTxt = tostring(claimBtn.Text or "")
+        if cTxt:find("孵好了") or cTxt:find("領取") then
+            hasReadyText = true
+        end
+        if cTxt:find("R%$") or cTxt:find("立即") or cTxt:find("加速") or cTxt:find("還沒有") then
+            hasRobuxPrompt = true
+        end
+    end
+
+    local isClaimVisible = claimBtn and claimBtn.Visible and claimBtn.Active ~= false
+    local isReady = false
+    if isClaimVisible and not hasRobuxPrompt and not hasNotReadyPrompt then
+        if minRemainSec ~= nil then
+            if minRemainSec <= 0 then
+                isReady = true
+            end
+        elseif hasReadyText then
+            isReady = true
+        end
+    end
+
+    return {
+        ready = isReady,
+        remainSec = minRemainSec,
+        claimBtn = claimBtn,
+        hasActiveEgg = hasActiveEgg
+    }
+end
+local function _runPetNestStealthAction(actionType)
+if not _isRuntimeHealthy() then return false, nil, 0 end
+_suppressNestToastPopups()
+    local mUI = pg:FindFirstChild("MainUI")
+    local nestPanel = mUI and mUI:FindFirstChild("PetNestPanel")
+    local nestFrame = nestPanel and nestPanel:FindFirstChild("Frame")
+    if not nestPanel or not nestFrame then
+        return false, nil, 0
+    end
+
+    local origVisible = nestPanel.Visible
+    local origPos = nestPanel:IsA("GuiObject") and nestPanel.Position or nil
+
+    if not origVisible and nestPanel:IsA("GuiObject") then
+        nestPanel.Position = UDim2.new(9, 0, 9, 0)
+        nestPanel.Visible = true
+        task.wait(0.06)
+    end
+
+    local triggered = false
+    local clickedCount = 0
+    local nextWaitSec = nil
+
+    if actionType == "hatch" then
+        local slotsContainer = nestFrame:FindFirstChild("Frame")
+        local readySlots = {}
+        local anyCountingDown = false
+        if slotsContainer then
+            for i = 1, 4 do
+                if _scriptDestroyed or not Config.AutoHatch then break end
+                local slot = slotsContainer:FindFirstChild("Slot" .. i)
+                local info = _inspectSlotHatchState(slot)
+                if info.ready and info.claimBtn then
+                    table.insert(readySlots, { index = i, btn = info.claimBtn })
+                elseif info.remainSec ~= nil and info.remainSec > 0 then
+                    anyCountingDown = true
+                    if nextWaitSec == nil or info.remainSec < nextWaitSec then
+                        nextWaitSec = info.remainSec
+                    end
+                end
+            end
+        end
+
+        if #readySlots > 0 then
+            for _, item in ipairs(readySlots) do
+                if _scriptDestroyed or not Config.AutoHatch then break end
+                if item.btn and item.btn.Parent and item.btn.Visible then
+                    if _fireMergeBtnConnections(item.btn) then
+                        triggered = true
+                        clickedCount = clickedCount + 1
+                    end
+                    task.wait(0.06)
+                end
+            end
+        elseif not anyCountingDown then
+            local claimAllBtn = nestFrame:FindFirstChild("ClaimAll")
+            local claimAllTxt = claimAllBtn and tostring(claimAllBtn.Text or "") or ""
+            if claimAllBtn and claimAllBtn.Visible and claimAllBtn.Active ~= false
+                and not claimAllTxt:find("R%$") and not claimAllTxt:find("加速") and not claimAllTxt:find("還沒有") then
+                if _fireMergeBtnConnections(claimAllBtn) then
+                    triggered = true
+                    clickedCount = 1
+                end
+            end
+        end
+    elseif actionType == "fill" then
+        local fillAllBtn = nestFrame:FindFirstChild("FillAll")
+        if fillAllBtn and fillAllBtn.Visible and fillAllBtn.Active ~= false then
+            if _fireMergeBtnConnections(fillAllBtn) then
+                triggered = true
+                clickedCount = 1
+            end
+        end
+    end
+
+    if not origVisible and nestPanel:IsA("GuiObject") then
+        nestPanel.Visible = false
+        if origPos then
+            nestPanel.Position = origPos
+        end
+    end
+
+    _suppressNestToastPopups()
+    return triggered, nextWaitSec, clickedCount
+end
+task.spawn(function()
+while not _scriptDestroyed do
+local sleepSec = math.max(0.25, Config.HatchIntervalMs / 1000)
+if Config.AutoHatch then
+pcall(function()
+local triggered, nextWaitSec, clickedCount = _runPetNestStealthAction("hatch")
+if triggered then
+_SessionStats.HatchCount = _SessionStats.HatchCount + math.max(1, clickedCount or 1)
+liveStatusText = string.format("🐣 到點精準孵化 +%d (累計: %d)", math.max(1, clickedCount or 1), _SessionStats.HatchCount)
+elseif nextWaitSec and nextWaitSec > 0 then
+local smartWait = math.clamp(nextWaitSec + 0.05, math.max(0.25, Config.HatchIntervalMs / 1000), 60)
+sleepSec = smartWait
+liveStatusText = string.format("⏳ 倒數未到不點擊：最近蛋剩 %.1f 秒", nextWaitSec)
+else
+liveStatusText = "👀 靈獸巢監控中：等待蛋可孵化"
+end
+end)
+end
+task.wait(sleepSec)
+end
+end)
+task.spawn(function()
+while not _scriptDestroyed do
+if Config.AutoFillEgg then
+pcall(function()
+if _runPetNestStealthAction("fill") then
+_SessionStats.FillEggCount = _SessionStats.FillEggCount + 1
+liveStatusText = string.format("🥚 背景自動放蛋完成 (累計: %d)", _SessionStats.FillEggCount)
+end
+end)
+end
+task.wait(math.max(0.25, Config.FillEggIntervalMs / 1000))
+end
+end)
+local _cachedPlaceBestBtn = nil
+local _lastPlaceBestScan = 0
+local function _findPlaceBestButton()
+if _cachedPlaceBestBtn and _cachedPlaceBestBtn.Parent and _cachedPlaceBestBtn:IsDescendantOf(pg) then
+return _cachedPlaceBestBtn
+end
+local now = tick()
+if now - _lastPlaceBestScan < 3.0 then
+return nil
+end
+_lastPlaceBestScan = now
+local foundBtn = nil
+pcall(function()
+for _, obj in ipairs(pg:GetDescendants()) do
+if obj:IsA("GuiButton") then
+local n = string.lower(tostring(obj.Name or ""))
+local txt = tostring(obj.Text or "")
+                local isExcluded = txt:find("擴充") or txt:find("上限") or txt:find("稀有度")
+                    or txt:find("凡品") or txt:find("靈品") or txt:find("寶品")
+                    or txt:find("仙品") or txt:find("神品") or txt:find("放上台")
+                    or txt:find("拿著") or txt:find("全部法寶") or txt:find("出售") or txt:find("賣")
+
+                if not isExcluded then
+                    if txt:find("自動擺最賺") or txt:find("擺最賺") or n:find("placebest") or n:find("autobest") then
+                        foundBtn = obj
+                        break
+                    end
+                end
+            end
+        end
+    end)
+    _cachedPlaceBestBtn = foundBtn
+    return foundBtn
+end
+local function _runPlaceBestStealthAction()
+if not _isRuntimeHealthy() then return false end
+local triggered = false
+pcall(function()
+local targetBtn = _findPlaceBestButton()
+if not targetBtn then return end
+        local panel = targetBtn:FindFirstAncestorWhichIsA("Frame")
+        while panel and panel.Parent and panel.Parent ~= pg do
+            local pName = string.lower(tostring(panel.Name or ""))
+            if pName:find("bag") or pName:find("artifact") or pName:find("inv") then
+                break
+            end
+            local nextFrame = panel.Parent:FindFirstAncestorWhichIsA("Frame")
+            if not nextFrame then break end
+            panel = nextFrame
+        end
+
+        local origVisible = panel and panel.Visible or true
+        local origPos = (panel and panel:IsA("GuiObject")) and panel.Position or nil
+
+        if panel and not origVisible and panel:IsA("GuiObject") then
+            panel.Position = UDim2.new(9, 0, 9, 0)
+            panel.Visible = true
+            task.wait(0.08)
+        end
+
+        if targetBtn.Visible and targetBtn.Active ~= false then
+            if _fireMergeBtnConnections(targetBtn) then
+                triggered = true
+            end
+        end
+
+        if panel and not origVisible and panel:IsA("GuiObject") then
+            panel.Visible = false
+            if origPos then
+                panel.Position = origPos
+            end
+        end
+    end)
+    return triggered
+end
+_makeToggle(mainPage, "AutoPlaceBest", Config.AutoPlaceBest, function(v)
+Config.AutoPlaceBest = v
+liveStatusText = v and "⭐ 背景自動擺最賺運行中..." or "⏸️ 背景自動擺最賺已停止"
+end)
+_makeSlider(mainPage, "PlaceBestInterval", Config.PlaceBestIntervalMs, 500, 15000, function(v)
+Config.PlaceBestIntervalMs = v
+end)
+local _VirtualUser = nil
+pcall(function()
+_VirtualUser = game:GetService("VirtualUser")
+end)
+if lp and lp.Idled then
+lp.Idled:Connect(function()
+if _scriptDestroyed or not Config.AntiAfk then return end
+pcall(function()
+if _VirtualUser then
+_VirtualUser:CaptureController()
+_VirtualUser:ClickButton2(Vector2.new())
+elseif _VirtualInputManager and _VirtualInputManager.SendKeyEvent then
+_VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.RightControl, false, game)
+task.wait(0.05)
+_VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.RightControl, false, game)
+end
+liveStatusText = "🛡️ 已自動防踢一次 (AFK 保護生效中)"
+end)
+end)
+end
+task.spawn(function()
+while not _scriptDestroyed do
+if Config.AutoPlaceBest then
+pcall(function()
+if _runPlaceBestStealthAction() then
+_SessionStats.PlaceBestCount = _SessionStats.PlaceBestCount + 1
+liveStatusText = string.format("⭐ 背景自動擺最賺完成 (累計: %d)", _SessionStats.PlaceBestCount)
+end
+end)
+end
+task.wait(math.max(0.5, (Config.PlaceBestIntervalMs or 5000) / 1000))
+end
+end)
+-- ==============================================================================
+-- 🥚 2. 自動抽蛋 (GachaTab)
+-- ==============================================================================
+local syncGachaVisual = nil
+_setGachaEnabled = function(v)
+local nextState = not not v
+Config.AutoGacha = nextState
+_gachaRunId = _gachaRunId + 1
+if syncGachaVisual then
+syncGachaVisual(nextState)
+end
+if not nextState then
+liveStatusText = "⏸️ 金錢祈願自動抽已停止"
+end
+end
+_makeToggle(gachaPage, "AutoGacha", Config.AutoGacha, function(v)
+_setGachaEnabled(v)
+end, function(setter)
+syncGachaVisual = setter
+end)
+local modeBtn = Instance.new("TextButton")
+modeBtn.Size = UDim2.new(1, -6, 0, 44)
+modeBtn.BackgroundColor3 = Color3.fromRGB(255, 225, 238)
+modeBtn.Text = t((Config.GachaMode == "single") and "ModeSingle" or "ModeTen")
+modeBtn.TextColor3 = Color3.fromRGB(160, 50, 100)
+modeBtn.Font = Enum.Font.GothamBold
+modeBtn.TextSize = Config.MenuTextSize
+modeBtn.TextTruncate = Enum.TextTruncate.AtEnd
+modeBtn.TextWrapped = false
+modeBtn.ZIndex = 15
+modeBtn.Parent = gachaPage
+applyCorner(modeBtn, 16)
+applyHoverEffect(modeBtn)
+table.insert(allInteractiveElements, {
+Obj = modeBtn,
+MaxSize = 18,
+CustomRefresh = function()
+modeBtn.Text = t((Config.GachaMode == "single") and "ModeSingle" or "ModeTen")
+end
+})
+modeBtn.MouseButton1Click:Connect(function()
+Config.GachaMode = (Config.GachaMode == "ten") and "single" or "ten"
+modeBtn.Text = t((Config.GachaMode == "single") and "ModeSingle" or "ModeTen")
+saveConfig()
+end)
+_makeSlider(gachaPage, "GachaInterval", Config.GachaIntervalMs, 60, 3000, function(v)
+Config.GachaIntervalMs = v
+end)
+_makeSlider(gachaPage, "GachaSkipX", Config.GachaSkipX, 50, 98, function(v)
+Config.GachaSkipX = v
+end)
+_makeSlider(gachaPage, "GachaSkipY", Config.GachaSkipY, 50, 98, function(v)
+Config.GachaSkipY = v
+end)
+UserInputService.InputBegan:Connect(function(input, gp)
+if _scriptDestroyed or gp then return end
+if input.KeyCode == Enum.KeyCode.F6 then
+_setGachaEnabled(not Config.AutoGacha)
+elseif input.KeyCode == Enum.KeyCode.F7 then
+_setBeamAutoRelease(not Config.AutoLaunch)
+saveConfig()
+end
+end)
+local IGNORE_GACHA_GUIS = {
+["MainUI"] = true,
+["Chat"] = true,
+["BubbleChat"] = true,
+}
+local function clickGachaPos(x, y, runId)
+if not _isGachaSessionValid(runId) then return end
+pcall(function()
+if _VirtualInputManager and _VirtualInputManager.SendMouseButtonEvent then
+_VirtualInputManager:SendMouseButtonEvent(x, y, 0, true, game, 1)
+task.wait(0.01)
+if not _isGachaSessionValid(runId) then return end
+_VirtualInputManager:SendMouseButtonEvent(x, y, 0, false, game, 1)
+elseif mouse1click and _isGachaSessionValid(runId) then
+mouse1click()
+end
+end)
+end
+local function fireGachaGui(guiBtn, runId)
+if not _isGachaSessionValid(runId) then return false end
+if not guiBtn or not guiBtn.Parent or not guiBtn:IsA("GuiButton") or not guiBtn.Visible then
+return false
+end
+    local firedConn = false
+    if getconnections then
+        for _, ev in ipairs({"MouseButton1Click", "Activated"}) do
+            if not _isGachaSessionValid(runId) then return false end
+            pcall(function()
+                for _, c in ipairs(getconnections(guiBtn[ev])) do
+                    if not _isGachaSessionValid(runId) then break end
+                    if c.Fire then
+                        c:Fire()
+                        firedConn = true
+                    elseif c.Function then
+                        c.Function()
+                        firedConn = true
+                    end
+                end
+            end)
+            if firedConn then break end
+        end
+    end
+
+    if not _isGachaSessionValid(runId) then return false end
+    local inset = _GuiService:GetGuiInset()
+    local cx = guiBtn.AbsolutePosition.X + guiBtn.AbsoluteSize.X / 2
+    local cy = guiBtn.AbsolutePosition.Y + guiBtn.AbsoluteSize.Y / 2 + inset.Y
+    if cx > 0 and cy > 0 then
+        clickGachaPos(cx, cy, runId)
+        return true
+    end
+    return firedConn
+end
+local function skipGachaBottomRight(runId)
+if not _isGachaSessionValid(runId) then return end
+local cam = workspace.CurrentCamera
+local vp = cam and cam.ViewportSize or Vector2.new(1280, 720)
+local inset = _GuiService:GetGuiInset()
+local x = vp.X * (Config.GachaSkipX / 100)
+local y = vp.Y * (Config.GachaSkipY / 100)
+clickGachaPos(x, y, runId)
+if _isGachaSessionValid(runId) and inset.Y > 0 then
+clickGachaPos(x, y + inset.Y, runId)
+end
+end
+local function isInsideMainGachaBox(obj)
+local gachaGui = pg:FindFirstChild("PetGachaGui")
+local box = gachaGui and gachaGui:FindFirstChild("PetGachaPanel") and gachaGui.PetGachaPanel:FindFirstChild("Box")
+if not box then return false end
+return obj == box or obj:IsDescendantOf(box)
+end
+local function hideHatchAnimationInBg()
+if not _isGachaRunning() then return end
+local cam = workspace.CurrentCamera
+local vp = cam and cam.ViewportSize or Vector2.new(1280, 720)
+local center = Vector2.new(vp.X * 0.5, vp.Y * 0.5)
+    for _, g in ipairs(pg:GetChildren()) do
+        if not _isGachaRunning() then return end
+        if g:IsA("ScreenGui") and g.Enabled and not IGNORE_GACHA_GUIS[g.Name] then
+            for _, obj in ipairs(g:GetDescendants()) do
+                if not _isGachaRunning() then return end
+                if not isInsideMainGachaBox(obj) and obj:IsA("GuiObject") then
+                    if obj:IsA("CanvasGroup") then
+                        if obj.GroupTransparency < 1 then
+                            obj.GroupTransparency = 1
+                        end
+                    elseif obj.Visible then
+                        local objCenter = obj.AbsolutePosition + (obj.AbsoluteSize * 0.5)
+                        local isCenterAnim = (objCenter - center).Magnitude < vp.Y * 0.36
+                            and obj.AbsoluteSize.X > 110 and obj.AbsoluteSize.Y > 110
+                        local isFullScreenOverlay = obj.AbsoluteSize.X > vp.X * 0.65
+                            and obj.AbsoluteSize.Y > vp.Y * 0.65
+
+                        if isCenterAnim or isFullScreenOverlay then
+                            obj.Visible = false
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+local function getCoinGachaButtons()
+local gachaGui = pg:FindFirstChild("PetGachaGui")
+local box = gachaGui and gachaGui:FindFirstChild("PetGachaPanel") and gachaGui.PetGachaPanel:FindFirstChild("Box")
+if not box then return nil, nil end
+local tabCoin = box:FindFirstChild("Tab_coin")
+local pageCoin = box:FindFirstChild("PageCoin")
+local left = pageCoin and pageCoin:FindFirstChild("Left")
+local pullBtn = left and left:FindFirstChild(Config.GachaMode == "single" and "Coin1" or "Coin10")
+return tabCoin, pullBtn
+end
+task.spawn(function()
+while not _scriptDestroyed do
+local activeRunId = _gachaRunId
+if _isGachaSessionValid(activeRunId) then
+local tabCoin, pullBtn = getCoinGachaButtons()
+if _isGachaSessionValid(activeRunId) then
+if pullBtn and pullBtn.Visible then
+if fireGachaGui(pullBtn, activeRunId) and _isGachaSessionValid(activeRunId) then
+_SessionStats.GachaCount = _SessionStats.GachaCount + ((Config.GachaMode == "single") and 1 or 10)
+liveStatusText = string.format(
+"🥚 金錢祈願連抽中 (%s) | 累計: %d",
+Config.GachaMode == "single" and "單抽" or "十連",
+_SessionStats.GachaCount
+)
+end
+elseif tabCoin and tabCoin.Visible then
+fireGachaGui(tabCoin, activeRunId)
+else
+skipGachaBottomRight(activeRunId)
+end
+end
+end
+task.wait(math.max(0.08, Config.GachaIntervalMs / 1000))
+end
+end)
+-- ==============================================================================
+-- 📊 3. 運行日誌 (LogsTab)
+-- ==============================================================================
+local statsCard = Instance.new("Frame")
+statsCard.Size = UDim2.new(1, -6, 0, 145)
+statsCard.BackgroundColor3 = Color3.fromRGB(255, 245, 250)
+statsCard.BackgroundTransparency = 0.3
+statsCard.ClipsDescendants = true
+statsCard.ZIndex = 15
+statsCard.Parent = logsPage
+applyCorner(statsCard, 16)
+local _statsCardStroke = Instance.new("UIStroke")
+_statsCardStroke.Color = Color3.fromRGB(255, 210, 230)
+_statsCardStroke.Transparency = 0.6
+_statsCardStroke.Thickness = 1
+_statsCardStroke.Parent = statsCard
+local statsTitle = Instance.new("TextLabel")
+statsTitle.Size = UDim2.new(1, -24, 0, 26)
+statsTitle.Position = UDim2.new(0, 12, 0, 10)
+statsTitle.BackgroundTransparency = 1
+statsTitle.Text = "⏱️ 掛機運行計時與數據看板"
+statsTitle.TextColor3 = Color3.fromRGB(180, 50, 110)
+statsTitle.Font = Enum.Font.GothamBold
+statsTitle.TextSize = Config.MenuTextSize
+statsTitle.TextXAlignment = Enum.TextXAlignment.Left
+statsTitle.TextTruncate = Enum.TextTruncate.AtEnd
+statsTitle.ZIndex = 16
+statsTitle.Parent = statsCard
+table.insert(allInteractiveElements, {Obj = statsTitle, MaxSize = 18})
+local statsDetailText = Instance.new("TextLabel")
+statsDetailText.Size = UDim2.new(1, -24, 1, -42)
+statsDetailText.Position = UDim2.new(0, 12, 0, 38)
+statsDetailText.BackgroundTransparency = 1
+statsDetailText.Text = "🌸 計時與日誌載入中..."
+statsDetailText.TextColor3 = Color3.fromRGB(90, 70, 85)
+statsDetailText.Font = Enum.Font.Code
+statsDetailText.TextSize = Config.MenuTextSize
+statsDetailText.TextXAlignment = Enum.TextXAlignment.Left
+statsDetailText.TextYAlignment = Enum.TextYAlignment.Top
+statsDetailText.TextWrapped = true
+statsDetailText.ZIndex = 16
+statsDetailText.Parent = statsCard
+table.insert(allInteractiveElements, {Obj = statsDetailText, MaxSize = 17})
+local resetStatsBtn = Instance.new("TextButton")
+resetStatsBtn.Size = UDim2.new(1, -6, 0, 42)
+resetStatsBtn.BackgroundColor3 = Color3.fromRGB(255, 230, 242)
+resetStatsBtn.Text = t("ResetStats")
+resetStatsBtn.TextColor3 = Color3.fromRGB(120, 80, 105)
+resetStatsBtn.Font = Enum.Font.GothamBold
+resetStatsBtn.TextSize = Config.MenuTextSize
+resetStatsBtn.TextTruncate = Enum.TextTruncate.AtEnd
+resetStatsBtn.ZIndex = 15
+resetStatsBtn.Parent = logsPage
+applyCorner(resetStatsBtn, 16)
+applyHoverEffect(resetStatsBtn)
+table.insert(allInteractiveElements, {Obj = resetStatsBtn, Key = "ResetStats", MaxSize = 18})
+resetStatsBtn.MouseButton1Click:Connect(function()
+_SessionStats.StartTime = tick()
+_SessionStats.LaunchCount = 0
+_SessionStats.GachaCount = 0
+_SessionStats.MergeCount = 0
+_SessionStats.HatchCount = 0
+_SessionStats.FillEggCount = 0
+_SessionStats.PlaceBestCount = 0
+_LastFiredPct = 0
+end)
+local statusCard = Instance.new("Frame")
+statusCard.Size = UDim2.new(1, -6, 0, 184)
+statusCard.BackgroundColor3 = Color3.fromRGB(255, 245, 250)
+statusCard.BackgroundTransparency = 0.3
+statusCard.ClipsDescendants = true
+statusCard.ZIndex = 15
+statusCard.Parent = logsPage
+applyCorner(statusCard, 16)
+local _statusCardStroke = Instance.new("UIStroke")
+_statusCardStroke.Color = Color3.fromRGB(255, 210, 230)
+_statusCardStroke.Transparency = 0.6
+_statusCardStroke.Thickness = 1
+_statusCardStroke.Parent = statusCard
+local statusTitle = Instance.new("TextLabel")
+statusTitle.Size = UDim2.new(1, -24, 0, 26)
+statusTitle.Position = UDim2.new(0, 12, 0, 10)
+statusTitle.BackgroundTransparency = 1
+statusTitle.Text = "🖥️ 系統即時監控狀態"
+statusTitle.TextColor3 = Color3.fromRGB(180, 50, 110)
+statusTitle.Font = Enum.Font.GothamBold
+statusTitle.TextSize = Config.MenuTextSize
+statusTitle.TextXAlignment = Enum.TextXAlignment.Left
+statusTitle.TextTruncate = Enum.TextTruncate.AtEnd
+statusTitle.ZIndex = 16
+statusTitle.Parent = statusCard
+table.insert(allInteractiveElements, {Obj = statusTitle, MaxSize = 18})
+local statusText = Instance.new("TextLabel")
+statusText.Size = UDim2.new(1, -28, 1, -46)
+statusText.Position = UDim2.new(0, 14, 0, 40)
+statusText.BackgroundTransparency = 1
+statusText.Text = "🔮 初始化中..."
+statusText.TextColor3 = Color3.fromRGB(90, 70, 85)
+statusText.Font = Enum.Font.Code
+statusText.TextSize = math.max(12, Config.MenuTextSize - 1)
+statusText.LineHeight = 1.25
+statusText.TextXAlignment = Enum.TextXAlignment.Left
+statusText.TextYAlignment = Enum.TextYAlignment.Top
+statusText.TextWrapped = true
+statusText.ZIndex = 16
+statusText.Parent = statusCard
+table.insert(allInteractiveElements, {Obj = statusText, MaxSize = 17})
+-- ==============================================================================
+-- 📜 4. 更新日誌 (ChangelogTab)
+-- ==============================================================================
+local changelogCard = Instance.new("Frame")
+changelogCard.Size = UDim2.new(1, -6, 0, 1420)
+changelogCard.BackgroundColor3 = Color3.fromRGB(255, 245, 250)
+changelogCard.BackgroundTransparency = 0.3
+changelogCard.ClipsDescendants = true
+changelogCard.ZIndex = 15
+changelogCard.Parent = changelogPage
+applyCorner(changelogCard, 16)
+local _changelogStroke = Instance.new("UIStroke")
+_changelogStroke.Color = Color3.fromRGB(255, 210, 230)
+_changelogStroke.Transparency = 0.6
+_changelogStroke.Thickness = 1
+_changelogStroke.Parent = changelogCard
+local changelogTitleLbl = Instance.new("TextLabel")
+changelogTitleLbl.Size = UDim2.new(1, -24, 0, 28)
+changelogTitleLbl.Position = UDim2.new(0, 12, 0, 10)
+changelogTitleLbl.BackgroundTransparency = 1
+changelogTitleLbl.Text = t("ChangelogTitle")
+changelogTitleLbl.TextColor3 = Color3.fromRGB(180, 50, 110)
+changelogTitleLbl.Font = Enum.Font.GothamBold
+changelogTitleLbl.TextSize = Config.MenuTextSize
+changelogTitleLbl.TextXAlignment = Enum.TextXAlignment.Left
+changelogTitleLbl.TextTruncate = Enum.TextTruncate.AtEnd
+changelogTitleLbl.ZIndex = 16
+changelogTitleLbl.Parent = changelogCard
+table.insert(allInteractiveElements, {Obj = changelogTitleLbl, Key = "ChangelogTitle", MaxSize = 18})
+local changelogBodyLbl = Instance.new("TextLabel")
+changelogBodyLbl.Size = UDim2.new(1, -24, 1, -44)
+changelogBodyLbl.Position = UDim2.new(0, 12, 0, 40)
+changelogBodyLbl.BackgroundTransparency = 1
+changelogBodyLbl.Text = ""
+changelogBodyLbl.TextColor3 = Color3.fromRGB(90, 70, 85)
+changelogBodyLbl.Font = Enum.Font.Code
+changelogBodyLbl.TextSize = math.max(12, Config.MenuTextSize - 1)
+changelogBodyLbl.TextXAlignment = Enum.TextXAlignment.Left
+changelogBodyLbl.TextYAlignment = Enum.TextYAlignment.Top
+changelogBodyLbl.TextWrapped = true
+changelogBodyLbl.ZIndex = 16
+changelogBodyLbl.Parent = changelogCard
+table.insert(allInteractiveElements, {Obj = changelogBodyLbl, MaxSize = 17})
+_refreshChangelogText = function()
+local lines = _UPDATE_LOGS_DATA[currentLanguage] or _UPDATE_LOGS_DATA.zh
+changelogBodyLbl.Text = table.concat(lines, "\n")
+local estLines = math.max(#lines, math.ceil(#changelogBodyLbl.Text / 42))
+local cardH = math.max(1160, 64 + estLines * 20)
+changelogCard.Size = UDim2.new(1, -6, 0, cardH)
+changelogPage.CanvasSize = UDim2.new(0, 0, 0, cardH + 36)
+end
+_refreshChangelogText()
+-- ==============================================================================
+-- 👑 5. 管理員菜單 (AdminTab - 純文字唯讀展示)
+-- ==============================================================================
+local adminHeaderCard = Instance.new("Frame")
+adminHeaderCard.Size = UDim2.new(1, -6, 0, 74)
+adminHeaderCard.BackgroundColor3 = Color3.fromRGB(255, 240, 246)
+adminHeaderCard.BackgroundTransparency = 0.25
+adminHeaderCard.ClipsDescendants = true
+adminHeaderCard.ZIndex = 15
+adminHeaderCard.Parent = adminPage
+applyCorner(adminHeaderCard, 16)
+
+local _adminHeaderStroke = Instance.new("UIStroke")
+_adminHeaderStroke.Color = Color3.fromRGB(255, 160, 200)
+_adminHeaderStroke.Transparency = 0.45
+_adminHeaderStroke.Thickness = 1.2
+_adminHeaderStroke.Parent = adminHeaderCard
+
+local adminTitleLbl = Instance.new("TextLabel")
+adminTitleLbl.Size = UDim2.new(1, -24, 0, 28)
+adminTitleLbl.Position = UDim2.new(0, 14, 0, 10)
+adminTitleLbl.BackgroundTransparency = 1
+adminTitleLbl.Text = "👑 管理員專屬控制台 (Admin Menu)"
+adminTitleLbl.TextColor3 = Color3.fromRGB(180, 50, 110)
+adminTitleLbl.Font = Enum.Font.GothamBlack
+adminTitleLbl.TextSize = Config.MenuTextSize
+adminTitleLbl.TextXAlignment = Enum.TextXAlignment.Left
+adminTitleLbl.TextTruncate = Enum.TextTruncate.AtEnd
+adminTitleLbl.ZIndex = 16
+adminTitleLbl.Parent = adminHeaderCard
+table.insert(allInteractiveElements, {Obj = adminTitleLbl, MaxSize = 18})
+
+local adminSubLbl = Instance.new("TextLabel")
+adminSubLbl.Size = UDim2.new(1, -24, 0, 24)
+adminSubLbl.Position = UDim2.new(0, 14, 0, 40)
+adminSubLbl.BackgroundTransparency = 1
+adminSubLbl.Text = "🔒 權限狀態：未授權（僅供文字預覽，所有項目均無法開啟）"
+adminSubLbl.TextColor3 = Color3.fromRGB(140, 95, 115)
+adminSubLbl.Font = Enum.Font.Code
+adminSubLbl.TextSize = math.max(11, Config.MenuTextSize - 1)
+adminSubLbl.TextXAlignment = Enum.TextXAlignment.Left
+adminSubLbl.TextTruncate = Enum.TextTruncate.AtEnd
+adminSubLbl.ZIndex = 16
+adminSubLbl.Parent = adminHeaderCard
+table.insert(allInteractiveElements, {Obj = adminSubLbl, MaxSize = 16})
+
+local _ADMIN_TEXT_ITEMS = {
+    { title = "🛡️ 全服公告廣播系統", desc = "發送頂部跑馬燈與全服提示訊息  [🔒 僅管理員可用]" },
+    { title = "💎 資源與靈石數值校準", desc = "後台數據同步與異常數值修正工具  [🔒 僅管理員可用]" },
+    { title = "⚡ 無冷卻極限攻速模式", desc = "解除客戶端動作冷卻與延遲限制  [🔒 僅管理員可用]" },
+    { title = "🎁 專屬禮包與法寶發放", desc = "指定玩家帳號發放限定法寶與靈獸蛋  [🔒 僅管理員可用]" },
+    { title = "🔑 卡密生成與黑名單管理", desc = "管理授權序號狀態、天數與設備解綁  [🔒 僅管理員可用]" },
+    { title = "📡 伺服器遠端事件監聽器", desc = "即時追蹤 RemoteEvent 封包與日誌  [🔒 僅管理員可用]" }
+}
+
+for _, item in ipairs(_ADMIN_TEXT_ITEMS) do
+    local row = Instance.new("Frame")
+    row.Size = UDim2.new(1, -6, 0, 62)
+    row.BackgroundColor3 = Color3.fromRGB(250, 242, 246)
+    row.BackgroundTransparency = 0.35
+    row.ClipsDescendants = true
+    row.Active = false
+    row.ZIndex = 15
+    row.Parent = adminPage
+    applyCorner(row, 16)
+
+    local rowStroke = Instance.new("UIStroke")
+    rowStroke.Color = Color3.fromRGB(230, 200, 215)
+    rowStroke.Transparency = 0.6
+    rowStroke.Thickness = 1
+    rowStroke.Parent = row
+
+    local itemTitle = Instance.new("TextLabel")
+    itemTitle.Size = UDim2.new(1, -86, 0, 24)
+    itemTitle.Position = UDim2.new(0, 16, 0, 10)
+    itemTitle.BackgroundTransparency = 1
+    itemTitle.Text = item.title
+    itemTitle.TextColor3 = Color3.fromRGB(115, 90, 105)
+    itemTitle.Font = Enum.Font.GothamBold
+    itemTitle.TextSize = Config.MenuTextSize
+    itemTitle.TextXAlignment = Enum.TextXAlignment.Left
+    itemTitle.TextTruncate = Enum.TextTruncate.AtEnd
+    itemTitle.ZIndex = 16
+    itemTitle.Parent = row
+    table.insert(allInteractiveElements, {Obj = itemTitle, MaxSize = 18})
+
+    local itemDesc = Instance.new("TextLabel")
+    itemDesc.Size = UDim2.new(1, -86, 0, 20)
+    itemDesc.Position = UDim2.new(0, 16, 0, 35)
+    itemDesc.BackgroundTransparency = 1
+    itemDesc.Text = item.desc
+    itemDesc.TextColor3 = Color3.fromRGB(150, 125, 140)
+    itemDesc.Font = Enum.Font.Code
+    itemDesc.TextSize = math.max(11, Config.MenuTextSize - 2)
+    itemDesc.TextXAlignment = Enum.TextXAlignment.Left
+    itemDesc.TextTruncate = Enum.TextTruncate.AtEnd
+    itemDesc.ZIndex = 16
+    itemDesc.Parent = row
+    table.insert(allInteractiveElements, {Obj = itemDesc, MaxSize = 15})
+
+    local lockTag = Instance.new("TextLabel")
+    lockTag.Size = UDim2.new(0, 62, 0, 28)
+    lockTag.Position = UDim2.new(1, -74, 0.5, -14)
+    lockTag.BackgroundColor3 = Color3.fromRGB(232, 220, 226)
+    lockTag.Text = "🔒 鎖定"
+    lockTag.TextColor3 = Color3.fromRGB(145, 120, 132)
+    lockTag.Font = Enum.Font.GothamBold
+    lockTag.TextSize = 12
+    lockTag.ZIndex = 16
+    lockTag.Parent = row
+    applyCorner(lockTag, 12)
+end
+
+-- ==============================================================================
+-- ⚙️ 6. 參數設定 (CfgTab)
+-- ==============================================================================
+local cfgStatusLbl = Instance.new("TextLabel")
+cfgStatusLbl.Size = UDim2.new(1, -6, 0, 24)
+cfgStatusLbl.BackgroundTransparency = 1
+cfgStatusLbl.Text = t("ConfigSavedMsg")
+cfgStatusLbl.TextColor3 = Color3.fromRGB(180, 50, 110)
+cfgStatusLbl.Font = Enum.Font.Code
+cfgStatusLbl.TextSize = math.max(11, Config.MenuTextSize - 1)
+cfgStatusLbl.TextXAlignment = Enum.TextXAlignment.Left
+cfgStatusLbl.TextTruncate = Enum.TextTruncate.AtEnd
+cfgStatusLbl.ZIndex = 15
+cfgStatusLbl.Parent = cfgPage
+local themeBtn
+do
+local f = Instance.new("Frame")
+f.Size = UDim2.new(1, -6, 0, 56)
+f.BackgroundColor3 = Color3.fromRGB(255, 245, 250)
+f.BackgroundTransparency = 0.3
+f.ClipsDescendants = true
+f.ZIndex = 15
+f.Parent = cfgPage
+applyCorner(f, 16)
+    local _fStroke = Instance.new("UIStroke")
+    _fStroke.Color = Color3.fromRGB(255, 210, 230)
+    _fStroke.Transparency = 0.6
+    _fStroke.Thickness = 1
+    _fStroke.Parent = f
+
+    local themeLbl = Instance.new("TextLabel")
+    themeLbl.Size = UDim2.new(0.45, -18, 1, 0)
+    themeLbl.Position = UDim2.new(0, 18, 0, 0)
+    themeLbl.BackgroundTransparency = 1
+    themeLbl.Text = t("AccentTheme")
+    themeLbl.TextColor3 = Color3.fromRGB(90, 70, 85)
+    themeLbl.Font = Enum.Font.GothamMedium
+    themeLbl.TextSize = Config.MenuTextSize
+    themeLbl.TextXAlignment = Enum.TextXAlignment.Left
+    themeLbl.TextTruncate = Enum.TextTruncate.AtEnd
+    themeLbl.ZIndex = 16
+    themeLbl.Parent = f
+    table.insert(allInteractiveElements, {Obj = themeLbl, Key = "AccentTheme", MaxSize = 18})
+
+    themeBtn = Instance.new("TextButton")
+    themeBtn.Size = UDim2.new(0.5, -18, 0, 34)
+    themeBtn.Position = UDim2.new(0.5, 6, 0.5, -17)
+    themeBtn.BackgroundColor3 = Color3.fromRGB(255, 230, 242)
+    themeBtn.Text = ThemeNames[currentThemeIndex]
+    themeBtn.TextColor3 = Color3.fromRGB(180, 50, 110)
+    themeBtn.Font = Enum.Font.GothamBold
+    themeBtn.TextSize = Config.MenuTextSize
+    themeBtn.TextTruncate = Enum.TextTruncate.AtEnd
+    themeBtn.ZIndex = 16
+    themeBtn.Parent = f
+    applyCorner(themeBtn, 12)
+    applyHoverEffect(themeBtn)
+    table.insert(allInteractiveElements, {Obj = themeBtn, MaxSize = 17})
+
+    themeBtn.MouseButton1Click:Connect(function()
+        currentThemeIndex = currentThemeIndex % #ThemeNames + 1
+        themeBtn.Text = ThemeNames[currentThemeIndex]
+        if _updateThemeStyle then _updateThemeStyle() end
+        saveConfig()
+        cfgStatusLbl.Text = t("ConfigSavedMsg")
+    end)
+end
+_makeSlider(cfgPage, "FontSize", Config.MenuTextSize, 10, 22, function(v)
+Config.MenuTextSize = v
+for _, item in ipairs(allInteractiveElements) do
+local clamped = item.MaxSize and math.min(v, item.MaxSize) or v
+if item.Obj then pcall(function() item.Obj.TextSize = clamped end) end
+if item.ValBox then pcall(function() item.ValBox.TextSize = clamped end) end
+end
+if _updateSidebarLayout then
+_updateSidebarLayout()
+end
+end)
+_makeSlider(cfgPage, "MenuAlpha", Config.MenuBackgroundAlpha, 0, 80, function(v)
+Config.MenuBackgroundAlpha = v
+TweenService:Create(mainPanel, TweenInfo.new(0.14, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+BackgroundTransparency = v / 100
+}):Play()
+end)
+_makeToggle(cfgPage, "AntiAfk", Config.AntiAfk, function(v)
+Config.AntiAfk = v
+liveStatusText = v and "🛡️ 防掛機踢出 (AFK不掉線) 已開啟" or "⏸️ 防掛機踢出已關閉"
+end)
+_updateThemeStyle = function()
+local accCol = getAccentColor()
+glow.Color = accCol
+panelStroke.Color = accCol
+floatStroke.Color = accCol
+statusTitle.TextColor3 = accCol
+statsTitle.TextColor3 = accCol
+changelogTitleLbl.TextColor3 = accCol
+adminTitleLbl.TextColor3 = accCol
+themeBtn.TextColor3 = accCol
+resizeHandle.TextColor3 = accCol
+    for _, item in ipairs(allInteractiveElements) do
+        if item.ValBox then item.ValBox.TextColor3 = accCol end
+        if item.SliderFill then item.SliderFill.BackgroundColor3 = accCol end
+        if item.KnobStroke then item.KnobStroke.Color = accCol end
+    end
+end
+_refreshLanguageText = function()
+for _, item in ipairs(navButtons) do
+item.Btn.Text = "   " .. t(item.Key)
+end
+for _, item in ipairs(allInteractiveElements) do
+if item.Key and item.Obj then
+item.Obj.Text = t(item.Key)
+end
+if item.CustomRefresh then
+item.CustomRefresh()
+end
+if item.ToggleBtn and item.GetState then
+item.ToggleBtn.Text = item.GetState() and t("On") or t("Off")
+end
+end
+if _refreshChangelogText then _refreshChangelogText() end
+cfgStatusLbl.Text = t("ConfigSavedMsg")
+if _updateSidebarLayout then
+_updateSidebarLayout()
+end
+end
+_updateThemeStyle()
+-- ==============================================================================
+-- 【光波完美一擊 & 執行循環 (融合 99% 即觸發 + 實際點擊強化版)】
+-- ==============================================================================
+local _cachedMainUI = nil
+local _cachedBeamBar = nil
+local _cachedBeamMarker = nil
+local _cachedBeamFireBtn = nil
+local _lastBeamScanTime = 0
+local function _findBeamBarAndButton()
+if not (_cachedMainUI and _cachedMainUI.Parent) then
+_cachedMainUI = pg:FindFirstChild("MainUI")
+end
+local mainUi = _cachedMainUI
+if not mainUi then
+return nil, nil, nil
+end
+if _cachedBeamBar and _cachedBeamBar.Parent and _cachedBeamBar:IsDescendantOf(mainUi) then
+if not (_cachedBeamMarker and _cachedBeamMarker.Parent == _cachedBeamBar) then
+for _, ch in ipairs(_cachedBeamBar:GetChildren()) do
+if ch:IsA("GuiObject") and ch.AbsoluteSize.X <= 16 and ch.AbsoluteSize.Y >= 20 then
+_cachedBeamMarker = ch
+break
+end
+end
+end
+if _cachedBeamFireBtn and _cachedBeamFireBtn.Parent and _cachedBeamFireBtn:IsDescendantOf(mainUi) then
+return _cachedBeamBar, _cachedBeamMarker, _cachedBeamFireBtn
+end
+end
+
+local now = tick()
+if now - _lastBeamScanTime < 0.25 then
+return _cachedBeamBar, _cachedBeamMarker, _cachedBeamFireBtn
+end
+_lastBeamScanTime = now
+
+    local bar = nil
+    local marker = nil
+    local fireBtn = nil
+
+    for _, d in ipairs(mainUi:GetDescendants()) do
+        if d:IsA("Frame") and math.abs(d.AbsoluteSize.X - 330) <= 5 and math.abs(d.AbsoluteSize.Y - 34) <= 5 then
+            bar = d
+            for _, ch in ipairs(d:GetChildren()) do
+                if ch:IsA("GuiObject") and ch.AbsoluteSize.X <= 16 and ch.AbsoluteSize.Y >= 20 then
+                    marker = ch
+                    break
+                end
+            end
+        elseif d:IsA("GuiObject") and d.Visible then
+            if d:IsA("TextLabel") or d:IsA("TextButton") then
+                local txt = string.gsub(tostring(d.Text), "^%s*(.-)%s*$", "%1")
+                if txt == "發！" then
+                    if d:IsA("GuiButton") then
+                        fireBtn = d
+                    elseif d.Parent and d.Parent:IsA("GuiButton") then
+                        fireBtn = d.Parent
+                    else
+                        fireBtn = d
+                    end
+                end
+            end
+        end
+    end
+
+    _cachedBeamBar = bar
+    _cachedBeamMarker = marker
+    _cachedBeamFireBtn = fireBtn
+    return bar, marker, fireBtn
+end
+local function _readBeamMetrics()
+local bar, marker, fireBtn = _findBeamBarAndButton()
+if not bar then
+return nil
+end
+    local left = bar.AbsolutePosition.X
+    local width = math.max(bar.AbsoluteSize.X, 1)
+
+    local centerPct = 0
+    if marker then
+        local centerX = marker.AbsolutePosition.X + (marker.AbsoluteSize.X * 0.5)
+        centerPct = math.clamp(((centerX - left) / width) * 100, 0, 100)
+    end
+
+    local numVal = nil
+    local parentObj = bar.Parent
+    if parentObj then
+        for _, sib in ipairs(parentObj:GetChildren()) do
+            if sib:IsA("TextLabel") and sib.Visible then
+                local cleaned = string.gsub(tostring(sib.Text), "^%s*(.-)%s*$", "%1")
+                local parsed = tonumber(cleaned)
+                if parsed then
+                    numVal = parsed
+                end
+            end
+        end
+    end
+
+    return {
+        centerPct = centerPct,
+        numVal = numVal,
+        fireBtn = fireBtn
+    }
+end
+local function _clickBeamAt(x, y)
+pcall(function()
+if _VirtualInputManager and typeof(_VirtualInputManager.SendMouseButtonEvent) == "function" then
+_VirtualInputManager:SendMouseButtonEvent(x, y, 0, true, game, 1)
+_VirtualInputManager:SendMouseButtonEvent(x, y, 0, false, game, 1)
+end
+end)
+pcall(function()
+if typeof(mouse1click) == "function" then
+mouse1click()
+elseif typeof(mouse1press) == "function" and typeof(mouse1release) == "function" then
+mouse1press()
+mouse1release()
+end
+end)
+end
+local _BeamRoundLocked = false
+local function _triggerBeamRelease(fireBtn, centerPct, numVal)
+if not _isRuntimeHealthy() then
+return false
+end
+if _BeamRoundLocked then
+return false
+end
+local _now = os.clock()
+if (_now - _LastTick) < Config.ClickDelay then
+return false
+end
+_LastTick = _now
+_BeamRoundLocked = true
+_LastFiredPct = centerPct or 0
+_SessionStats.LaunchCount = _SessionStats.LaunchCount + 1
+    -- 單次精準觸發「發！」按鈕（不連點畫面中央，且本輪鎖定只點一次）
+    if fireBtn and fireBtn.Visible then
+        local firedSignal = false
+        pcall(function()
+            if typeof(firesignal) == "function" and fireBtn:IsA("GuiButton") then
+                firesignal(fireBtn.MouseButton1Click)
+                firesignal(fireBtn.Activated)
+                firedSignal = true
+            end
+        end)
+        if not firedSignal then
+            local cx = fireBtn.AbsolutePosition.X + (fireBtn.AbsoluteSize.X * 0.5)
+            local cy = fireBtn.AbsolutePosition.Y + (fireBtn.AbsoluteSize.Y * 0.5)
+            _clickBeamAt(cx, cy)
+        end
+    end
+
+    local valStr = numVal and tostring(numVal) or "-"
+    liveStatusText = string.format(
+        "⚡ 光波單次精準釋放 [%.1f%% / 數值:%s] (累計: %d次)",
+        _LastFiredPct,
+        valStr,
+        _SessionStats.LaunchCount
+    )
+
+    return true
+end
+local function formatElapsedTime(sec)
+local h = math.floor(sec / 3600)
+local m = math.floor((sec % 3600) / 60)
+local s = math.floor(sec % 60)
+return string.format("%02d:%02d:%02d", h, m, s)
+end
+local lastGachaHideTime = 0
+local lastToastSuppressTime = 0
+local lastStatsUiUpdateTime = 0
+local cachedExpiryLine = tostring(activeKeyExpiresText or "未取得到期時間"):gsub("%s*%(剩", "\n      (剩")
+local cachedExecutorName = _getExecutorName()
+RunService.RenderStepped:Connect(function(dt)
+if _scriptDestroyed then return end
+    local now = tick()
+    if Config.AutoGacha and (now - lastGachaHideTime >= 0.35) then
+        lastGachaHideTime = now
+        hideHatchAnimationInBg()
+    end
+    if (Config.AutoHatch or Config.AutoFillEgg) and (now - lastToastSuppressTime >= 0.85) then
+        lastToastSuppressTime = now
+        _suppressNestToastPopups()
+    end
+
+    if now - lastStatsUiUpdateTime >= 0.5 then
+        lastStatsUiUpdateTime = now
+        local elapsed = now - _SessionStats.StartTime
+        local ping = 0
+        pcall(function()
+            ping = math.floor(_Stats.Network.ServerStatsItem["Data Ping"]:GetValue())
+        end)
+
+        statsDetailText.Text = string.format(
+            "• ⏳ 累計掛機時長: %s\n• 🚀 釋放: %d 次 (上次 %.1f%%) | 🥚 抽蛋: %d | ⚗️ 合成: %d\n• 🐣 孵化: %d 次 | 🥚 放蛋: %d 次 | ⭐ 擺最賺: %d 次",
+            formatElapsedTime(elapsed),
+            _SessionStats.LaunchCount,
+            _LastFiredPct,
+            _SessionStats.GachaCount,
+            _SessionStats.MergeCount,
+            _SessionStats.HatchCount,
+            _SessionStats.FillEggCount,
+            _SessionStats.PlaceBestCount
+        )
+
+        cachedExpiryLine = tostring(activeKeyExpiresText or "未取得到期時間"):gsub("%s*%(剩", "\n      (剩")
+        statusText.Text = string.format(
+            "• 💻 執行環境: %s\n• 📶 網路延遲: %d ms\n• ⏳ 卡號有效時間: %s\n• %s",
+            cachedExecutorName,
+            ping,
+            cachedExpiryLine,
+            liveStatusText
+        )
+        local lineBreaks = select(2, statusText.Text:gsub("\n", ""))
+        local desiredCardH = math.max(184, 54 + (lineBreaks + 1) * 24)
+        if math.abs(statusCard.Size.Y.Offset - desiredCardH) > 2 then
+            statusCard.Size = UDim2.new(1, -6, 0, desiredCardH)
+        end
+    end
+
+    pcall(function()
+        if Config.AutoFixedTp and (now - _lastFixedTpTick >= 0.6) then
+            local _char = lp.Character
+            local _hrp = _char and (_char:FindFirstChild("HumanoidRootPart") or _char.PrimaryPart)
+            if _char and _hrp then
+                local destPos = Vector3.new(tonumber(Config.FixedTpX) or 11.41, tonumber(Config.FixedTpY) or 3.35, tonumber(Config.FixedTpZ) or 9.28)
+                if (_hrp.Position - destPos).Magnitude > 0.75 then
+                    _lastFixedTpTick = now
+                    _teleportToFixedPoint()
+                end
+            end
+        end
+    end)
+
+    pcall(function()
+        if Config.AutoTp then
+            local _char = lp.Character
+            local _hrp = _char and (_char:FindFirstChild("HumanoidRootPart") or _char.PrimaryPart)
+            local _hum = _char and _char:FindFirstChildOfClass("Humanoid")
+            local _cam = workspace.CurrentCamera
+            if _hrp and _cam then
+                local _look = _cam.CFrame.LookVector
+                local _flat = Vector3.new(_look.X, 0, _look.Z)
+                if _flat.Magnitude > 1e-4 then
+                    local _dir = _flat.Unit
+                    local _tpStep = math.clamp(((_hum and _hum.WalkSpeed) or 16) * math.min(dt, 0.1), 0.15, 6)
+                    local _curPos = _hrp.Position
+                    local _targetPos = _curPos + _dir * _tpStep
+                    local _rot = CFrame.lookAt(_targetPos, _targetPos + _dir)
+                    if _char.PivotTo then
+                        _char:PivotTo(_rot)
+                    else
+                        _hrp.CFrame = _rot
+                    end
+                end
+            end
+        end
+    end)
+
+    if not _isRuntimeHealthy() then
+        return
+    end
+
+    if not Config.AutoLaunch then
+        return
+    end
+
+    pcall(function()
+        local metrics = _readBeamMetrics()
+        if not metrics then
+            _BeamRoundLocked = false
+            liveStatusText = string.format("⏳ 等待光波進度條出現... | 上次點擊: %.1f%% | 總計: %d 次", _LastFiredPct, _SessionStats.LaunchCount)
+            return
+        end
+
+        local hitPct = metrics.centerPct >= Config.TargetPercent
+        local hitVal = (metrics.numVal ~= nil and metrics.numVal >= Config.TargetValue)
+
+        -- 當進度條與數值回到未達標狀態（代表新一輪光波蓄力開始），自動解鎖允許下一次單次觸發
+        if not hitPct and not hitVal then
+            _BeamRoundLocked = false
+        end
+
+        local valLabel = metrics.numVal and tostring(metrics.numVal) or "-"
+        if _BeamRoundLocked then
+            liveStatusText = string.format(
+                "✅ 本輪已單次釋放，等待重置... | 上次點擊: %.1f%% | 總計: %d 次",
+                _LastFiredPct,
+                _SessionStats.LaunchCount
+            )
+            return
+        end
+
+        liveStatusText = string.format(
+            "📊 游標: %.1f%% (目標 %.1f%%) | 數值: %s | 上次點擊: %.1f%% | 總計: %d 次",
+            metrics.centerPct,
+            Config.TargetPercent,
+            valLabel,
+            _LastFiredPct,
+            _SessionStats.LaunchCount
+        )
+
+        if hitPct or hitVal then
+            _triggerBeamRelease(metrics.fireBtn, metrics.centerPct, metrics.numVal)
+        end
+    end)
+end)
